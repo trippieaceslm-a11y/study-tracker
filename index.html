@@ -107,6 +107,7 @@
   <div class="card">
     <h3>Add a Course / Study Record</h3>
     <div class="form-row">
+      <input id="code" placeholder="Code" style="flex:none;width: 140px; text-transform: uppercase;" />
       <input id="name" placeholder="Course Name (e.g. Linear Algebra)" />
       <input id="unitNames" placeholder="Unit Names (Optional)" />
       <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width: 70px; flex: none;" />
@@ -232,6 +233,7 @@
   }
 
   function addRecord() {
+    const code = document.getElementById('code').value,trim.toUpperCase();
     const name = document.getElementById('name').value.trim();
     const unitNames = document.getElementById('unitNames').value.trim();
     const units = parseFloat(document.getElementById('units').value);
@@ -239,9 +241,10 @@
     const status = document.getElementById('status').value;
     if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
     
-    getRecords().push({ id: Date.now(), code: '', name, unitNames, units, examDate, status, studyHours: 0 });
+    getRecords().push({ id: Date.now(), code: code, name, unitNames, units, examDate, status, studyHours: 0 });
     save(); render();
     
+    document.getElementById('code').value='';
     document.getElementById('name').value = '';
     document.getElementById('unitNames').value = '';
     document.getElementById('units').value = '';
@@ -258,7 +261,7 @@
     const rec = getRecords().find(r => r.id === id);
     const row = document.getElementById('row-' + id);
     row.innerHTML = `
-      <td class="course-code">${rec.code || '—'}</td>
+      <td><input id="edit-code-${id}" value="${rec.code || "}" style="width:80px; text-transform:uppercase;"></td>
       <td>
         <input id="edit-name-${id}" value="${rec.name}" style="width:100%; margin-bottom:4px;">
         <input id="edit-unitnames-${id}" value="${rec.unitNames || ''}" placeholder="Unit names..." style="width:100%; font-size:0.8rem;">
@@ -282,6 +285,7 @@
 
   function saveEdit(id) {
     const rec = getRecords().find(r => r.id === id);
+    rec.code = document.grtElementBYid('edit-code-${id}').value.trim().toUpperCase(;)
     rec.name = document.getElementById(`edit-name-${id}`).value.trim() || rec.name;
     rec.unitNames = document.getElementById(`edit-unitnames-${id}`).value.trim();
     const u = parseFloat(document.getElementById(`edit-units-${id}`).value);
