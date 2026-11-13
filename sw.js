@@ -1,6 +1,6 @@
 const CACHE_NAME = 'study-tracker-v1';
 const ASSETS = [
-  'study-tracker.html',
+  'index.html',
   'manifest.json'
 ];
 
