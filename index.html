@@ -4,56 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Semester Unit Tracker — Math & CS</title>
-<link rel="manifest" href="Manifest.json">
+<link rel="manifest" href="manifest.json">
 <style>
   * { box-sizing: border-box; font-family: system-ui, sans-serif; }
   body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: orange; }
-  h1 { color: #000000; margin-bottom: 0.2rem; }
-  h2 { color: #000000; font-size: 1rem; font-weight: bold; margin-top: 0; }
-  .card { background: darkgreen; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  h1 { color: #000; margin-bottom: 0.2rem; }
+  h2 { color: #000; font-size: 1rem; font-weight: 400; margin-top: 0; }
+  .card { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
   
-  /* Top Controls */
   .top-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
   .semester-selector { display: flex; gap: 0.5rem; align-items: center; font-weight: bold; }
-  .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid black; font-weight: bold; color: black; }
+  .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid #0066ff; font-weight: bold; color: #0066ff; }
   
   input, select, button { padding: 0.6rem; font-size: 1rem; border-radius: 6px; border: 1px solid #ccc; }
-  button { background: black; color: white; border: none; cursor: pointer; font-weight: 500; }
-  button:hover { background: black; }
+  button { background: #0066ff; color: white; border: none; cursor: pointer; font-weight: 500; }
+  button:hover { background: #0052cc; }
   
   .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .btn-outline { background: black; color: white; border: 1px solid black; }
-  .btn-outline:hover { background: black; }
+  .btn-outline { background: white; color: #0066ff; border: 1px solid #0066ff; }
+  .btn-outline:hover { background: #e8f0ff; }
   
-  .small-btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; margin-right: 4px; white-space: nowrap; }
-  .delete-btn { background: black; }
+  .small-btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; margin-right: 4px; white-space: nowrap; border-radius: 4px; }
+  .delete-btn { background: #ff4444; }
   .delete-btn:hover { background: #cc0000; }
-  .edit-btn { background: #000; }
-  .edit-btn:hover { background: yellow; }
-  .log-btn { background: black; }
-  .log-btn:hover { background: blue; }
-  .save-btn { background: black; }
-  .save-btn:hover { background: gold; }
+  .edit-btn { background: #f0a500; }
+  .edit-btn:hover { background: #cc8800; }
+  .log-btn { background: #8e44ad; }
+  .log-btn:hover { background: #732d91; }
+  .save-btn { background: #28a745; }
+  .save-btn:hover { background: #1e7e34; }
   
-  /* MOBILE FIX: Scrollable Table Wrapper */
   .table-wrap { overflow-x: auto; width: 100%; margin-top: 1rem; }
-  table { width: 100%; border-collapse: collapse; min-width: 700px; /* Forces scroll on small screens */ }
-  th, td { text-align: left; padding: 0.8rem 0.6rem; border-bottom: 1px solid white; vertical-align: middle; font-size: 0.95rem; }
-  th { background: dodgerblue; font-size: 0.85rem; font-weight: bolder; text-transform: uppercase; color: #000000; }
-  
-  /* Actions column fix */
+  table { width: 100%; border-collapse: collapse; min-width: 750px; }
+  th, td { text-align: left; padding: 0.8rem 0.6rem; border-bottom: 1px solid #eee; vertical-align: middle; font-size: 0.95rem; }
+  th { background: #f0f0f5; font-size: 0.85rem; text-transform: uppercase; color: #555; }
   .actions-cell { white-space: nowrap; }
 
   .stats { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-  .stat { flex: 1; min-width: 110px; background: darkturquoise; padding: 1rem; border-radius: 8px; text-align: center; }
-  .stat strong { display: block; font-size: 1.5rem; color: black; }
-  .stat.study-stat { background: coral; }
-  .stat.study-stat strong { color: rgb(2, 44, 2); }
+  .stat { flex: 1; min-width: 110px; background: #e8f0ff; padding: 1rem; border-radius: 8px; text-align: center; }
+  .stat strong { display: block; font-size: 1.5rem; color: #0066ff; }
+  .stat.study-stat { background: #f4ecf7; }
+  .stat.study-stat strong { color: #8e44ad; }
   
   .form-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .form-row input, .form-row select { flex: 1; min-width: 120px; }
   .units-input { width: 80px; }
-  .course-code { color: black; font-size: 0.85rem; font-weight: bolder; }
+  .course-code { color: #888; font-size: 0.85rem; }
+  
+  /* NEW STYLES for Unit Names and Countdown */
+  .unit-subtext { display: block; color: #666; font-size: 0.8rem; margin-top: 4px; font-style: italic; }
+  .exam-red { color: #ff0000; font-weight: bold; }
+  .exam-orange { color: #f0a500; font-weight: bold; }
+  .exam-normal { color: #28a745; font-weight: bold; }
+  .exam-passed { color: #888; }
+
+  @media (max-width: 600px) {
+    body { margin: 10px auto; padding: 0 10px; }
+    h1 { font-size: 1.3rem; }
+    h2 { font-size: 0.85rem; margin-bottom: 10px; }
+    .card { padding: 12px; margin-bottom: 10px; border-radius: 8px; }
+    
+    .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+    .semester-selector { justify-content: space-between; font-size: 0.9rem; }
+    .semester-selector select, .semester-selector button { padding: 4px 8px; font-size: 0.85rem; }
+    .btn-group { width: 100%; }
+    .btn-group button { flex: 1; padding: 6px; font-size: 0.8rem; }
+    
+    .form-row { gap: 5px; }
+    .form-row input, .form-row select { padding: 6px; font-size: 0.85rem; min-width: 0; }
+    .form-row button { padding: 6px 12px; font-size: 0.85rem; width: 100%; }
+    
+    th:nth-child(1), td:nth-child(1) { display: none; } /* Hide Code column */
+    
+    table { min-width: 100%; }
+    th, td { padding: 6px 4px; font-size: 0.8rem; }
+    
+    .actions-cell { display: flex; flex-direction: column; gap: 4px; }
+    .small-btn { padding: 3px 6px; font-size: 0.7rem; margin-right: 0; text-align: center; }
+    
+    .stats { gap: 5px; margin-top: 10px; flex-wrap: nowrap; }
+    .stat { padding: 8px 4px; min-width: 0; border-radius: 6px; }
+    .stat strong { font-size: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -75,9 +107,11 @@
   <div class="card">
     <h3>Add a Course / Study Record</h3>
     <div class="form-row">
-      <input id="name" placeholder="Course name (e.g. Calculus I)" />
-      <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" />
-      <select id="status">
+      <input id="name" placeholder="Course Name (e.g. Linear Algebra)" />
+      <input id="unitNames" placeholder="Unit Names (Optional)" />
+      <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width: 70px; flex: none;" />
+      <input id="examDate" type="date" title="Final Exam Date" style="flex: none;" />
+      <select id="status" style="flex: none; width: 120px;">
         <option value="In Progress">In Progress</option>
         <option value="Completed">Completed</option>
         <option value="Planned">Planned</option>
@@ -89,11 +123,10 @@
   <div class="card">
     <h3>My Records</h3>
     
-    <!-- ADDED TABLE WRAPPER FOR MOBILE SCROLLING -->
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Code</th><th>Course</th><th>Units</th><th>Status</th><th>Study Hrs</th><th>Actions</th></tr>
+          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam In</th><th>Study Hrs</th><th>Actions</th></tr>
         </thead>
         <tbody id="recordsBody"></tbody>
       </table>
@@ -126,7 +159,7 @@
     appData = {
       activeSemester: 'Semester 1',
       semesters: {
-        'Semester 1': DEFAULT_COURSES.map((c, i) => ({ id: Date.now() + i, ...c, studyHours: 0 }))
+        'Semester 1': DEFAULT_COURSES.map((c, i) => ({ id: Date.now() + i, ...c, studyHours: 0, unitNames: '', examDate: '' }))
       }
     };
     save();
@@ -142,30 +175,40 @@
     ).join('');
   }
 
-  function switchSemester(sem) {
-    appData.activeSemester = sem;
-    save();
-    render();
-  }
+  function switchSemester(sem) { appData.activeSemester = sem; save(); render(); }
 
   function createSemester() {
-    const name = prompt("Enter new semester name (e.g., Semester 2, Year 4 Sem 1):");
+    const name = prompt("Enter new semester name:");
     if (!name || name.trim() === '') return;
     const cleanName = name.trim();
-    if (appData.semesters[cleanName]) { alert("A semester with that name already exists!"); return; }
+    if (appData.semesters[cleanName]) { alert("Semester already exists!"); return; }
     appData.semesters[cleanName] = [];
     appData.activeSemester = cleanName;
-    save();
-    renderSemesterDropdown();
-    render();
+    save(); renderSemesterDropdown(); render();
+  }
+
+  // Calculate Days Left for Exam
+  function getDaysLeft(dateStr) {
+    if (!dateStr) return '<span class="exam-passed">—</span>';
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const exam = new Date(dateStr);
+    exam.setHours(0,0,0,0);
+    const diffDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return `<span class="exam-passed">Passed</span>`;
+    if (diffDays === 0) return `<span class="exam-red">Today!</span>`;
+    if (diffDays <= 7) return `<span class="exam-red">${diffDays} days</span>`;
+    if (diffDays <= 14) return `<span class="exam-orange">${diffDays} days</span>`;
+    return `<span class="exam-normal">${diffDays} days</span>`;
   }
 
   function exportCSV() {
     const records = getRecords();
-    if (records.length === 0) { alert("No records to export in this semester."); return; }
-    let csvContent = "Code,Course Name,Units,Status,Study Hours\n";
+    if (records.length === 0) { alert("No records to export."); return; }
+    let csvContent = "Code,Course Name,Unit Names,Units,Status,Exam Date,Study Hours\n";
     records.forEach(r => {
-      csvContent += `"${r.code || ''}","${r.name}",${r.units},"${r.status}",${r.studyHours || 0}\n`;
+      csvContent += `"${r.code || ''}","${r.name}","${r.unitNames || ''}",${r.units},"${r.status}","${r.examDate || ''}",${r.studyHours || 0}\n`;
     });
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -178,35 +221,37 @@
   }
 
   function logHours(id) {
-    const records = getRecords();
-    const rec = records.find(r => r.id === id);
+    const rec = getRecords().find(r => r.id === id);
     if (!rec) return;
-    const input = prompt(`How many hours did you study for "${rec.name}"? (Enter a number)`, "1");
+    const input = prompt(`How many hours did you study for "${rec.name}"?`, "1");
     if (input === null) return;
     const hours = parseFloat(input);
     if (isNaN(hours) || hours <= 0) { alert("Please enter a valid positive number."); return; }
     rec.studyHours = (rec.studyHours || 0) + hours;
-    save();
-    render();
+    save(); render();
   }
 
   function addRecord() {
     const name = document.getElementById('name').value.trim();
+    const unitNames = document.getElementById('unitNames').value.trim();
     const units = parseFloat(document.getElementById('units').value);
+    const examDate = document.getElementById('examDate').value;
     const status = document.getElementById('status').value;
-    if (!name || isNaN(units) || units <= 0) { alert('Please enter a course name and valid units.'); return; }
-    getRecords().push({ id: Date.now(), code: '', name, units, status, studyHours: 0 });
-    save();
-    render();
+    if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
+    
+    getRecords().push({ id: Date.now(), code: '', name, unitNames, units, examDate, status, studyHours: 0 });
+    save(); render();
+    
     document.getElementById('name').value = '';
+    document.getElementById('unitNames').value = '';
     document.getElementById('units').value = '';
+    document.getElementById('examDate').value = '';
   }
 
   function deleteRecord(id) {
-    if (!confirm('Delete this record? Study hours for this course will also be lost.')) return;
+    if (!confirm('Delete this record? Study hours will be lost.')) return;
     appData.semesters[appData.activeSemester] = getRecords().filter(r => r.id !== id);
-    save();
-    render();
+    save(); render();
   }
 
   function startEdit(id) {
@@ -214,15 +259,19 @@
     const row = document.getElementById('row-' + id);
     row.innerHTML = `
       <td class="course-code">${rec.code || '—'}</td>
-      <td><input id="edit-name-${id}" value="${rec.name}" style="width:100%; min-width:150px;"></td>
-      <td><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}" class="units-input"></td>
       <td>
-        <select id="edit-status-${id}">
+        <input id="edit-name-${id}" value="${rec.name}" style="width:100%; margin-bottom:4px;">
+        <input id="edit-unitnames-${id}" value="${rec.unitNames || ''}" placeholder="Unit names..." style="width:100%; font-size:0.8rem;">
+      </td>
+      <td><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}" class="units-input" style="width: 60px;"></td>
+      <td>
+        <select id="edit-status-${id}" style="width: 100px;">
           <option ${rec.status==='In Progress'?'selected':''}>In Progress</option>
           <option ${rec.status==='Completed'?'selected':''}>Completed</option>
           <option ${rec.status==='Planned'?'selected':''}>Planned</option>
         </select>
       </td>
+      <td><input id="edit-examdate-${id}" type="date" value="${rec.examDate || ''}" style="width: 120px;"></td>
       <td>${rec.studyHours || 0}</td>
       <td class="actions-cell">
         <button class="small-btn save-btn" onclick="saveEdit(${id})">Save</button>
@@ -234,18 +283,20 @@
   function saveEdit(id) {
     const rec = getRecords().find(r => r.id === id);
     rec.name = document.getElementById(`edit-name-${id}`).value.trim() || rec.name;
+    rec.unitNames = document.getElementById(`edit-unitnames-${id}`).value.trim();
     const u = parseFloat(document.getElementById(`edit-units-${id}`).value);
     if (!isNaN(u) && u >= 0) rec.units = u;
     rec.status = document.getElementById(`edit-status-${id}`).value;
-    save();
-    render();
+    rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
+    save(); render();
   }
 
   function resetToDefaults() {
-    if (!confirm(`Reset "${appData.activeSemester}" back to the default courses? Study hours will be lost.`)) return;
-    appData.semesters[appData.activeSemester] = DEFAULT_COURSES.map((c, i) => ({ id: Date.now() + i, ...c, studyHours: 0 }));
-    save();
-    render();
+    if (!confirm(`Reset to default courses? Study hours will be lost.`)) return;
+    appData.semesters[appData.activeSemester] = DEFAULT_COURSES.map((c, i) => ({ 
+      id: Date.now() + i, ...c, studyHours: 0, unitNames: '', examDate: '' 
+    }));
+    save(); render();
   }
 
   function render() {
@@ -253,14 +304,18 @@
     const body = document.getElementById('recordsBody');
     
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888; padding: 2rem;">No courses here. Add one above or reset.</td></tr>`;
+      body.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding: 2rem;">No courses. Add one above or reset.</td></tr>`;
     } else {
       body.innerHTML = records.map(r => `
         <tr id="row-${r.id}">
           <td class="course-code">${r.code || '—'}</td>
-          <td>${r.name}</td>
+          <td>
+            ${r.name}
+            ${r.unitNames ? `<span class="unit-subtext">${r.unitNames}</span>` : ''}
+          </td>
           <td>${r.units}</td>
           <td>${r.status}</td>
+          <td>${getDaysLeft(r.examDate)}</td>
           <td><strong>${r.studyHours || 0}</strong></td>
           <td class="actions-cell">
             <button class="small-btn log-btn" onclick="logHours(${r.id})">⏱️ Log</button>
@@ -280,11 +335,13 @@
     document.getElementById('totalStudyHours').textContent  = sumHours(records);
   }
 
+  // Register PWA Service Worker for offline use
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+
   renderSemesterDropdown();
   render();
-  if("serviceWorker" in navigation){
-    navigator.serviceWorker.register("sw.js");  
-  }
 </script>
 </body>
 </html>
