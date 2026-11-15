@@ -8,10 +8,10 @@
 <link rel="manifest" href="Manifest.json">
 <style>
   * { box-sizing: border-box; font-family: system-ui, sans-serif; }
-  body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: rgb(44, 170, 44); }
+  body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: rgba(22, 180, 101, 0.788); }
   h1 { color: #000; margin-bottom: 0.2rem; }
   h2 { color: #000; font-size: 1rem; font-weight: bolder; margin-top: 0; }
-  .card { background: orange; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 8px #000; }
+  .card { background: rgb(212, 151, 36); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 8px #000; }
   
   .top-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
   .semester-selector { display: flex; gap: 0.5rem; align-items: center; font-weight: bold; flex-wrap: wrap; }
@@ -64,37 +64,35 @@
   body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
   h1 { font-size: 1.3rem; }
   h2 { font-size: 0.85rem; margin-bottom: 10px; }
-  .card { padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+  .card { padding: 12px; margin-bottom: 10px; border-radius: 8px; }
   
-  /* Top Controls */
+  /* Top Controls stack neatly */
   .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
-  .semester-selector { justify-content: space-between; font-size: 0.9rem; flex-wrap: wrap; }
-  .semester-selector select, .semester-selector button { padding: 4px 8px; font-size: 0.8rem; }
-  .btn-group { width: 100%; display: flex; gap: 5px; }
-  .btn-group button { flex: 1; padding: 6px; font-size: 0.8rem; }
+  .semester-selector { justify-content: space-between; font-size: 0.9rem; flex-wrap: wrap; gap: 5px; }
+  .semester-selector select { flex: 1; padding: 6px; }
+  .semester-selector button { padding: 6px 10px; font-size: 0.85rem; }
+  .btn-group { width: 100%; display: flex; gap: 5px; flex-wrap: wrap; }
+  .btn-group button { flex: 1; padding: 8px; font-size: 0.85rem; }
   
-  /* Stack Form Inputs vertically so they fit */
-  .form-row { flex-direction: column; gap: 6px; }
-  .form-row input, .form-row select { width: 100% !important; flex: none !important; padding: 8px; font-size: 0.9rem; }
-  .form-row button { padding: 8px; font-size: 0.9rem; width: 100%; }
+  /* Make the form stack vertically so it's not squished */
+  .form-row { flex-direction: column; gap: 8px; }
+  .form-row input, .form-row select { width: 100% !important; flex: none !important; padding: 10px; font-size: 0.95rem; }
+  .form-row button { padding: 10px; font-size: 1rem; width: 100%; }
   
-  /* Make Table fit the screen */
-  .table-wrap { overflow-x: hidden; } /* Stop side scrolling */
-  table { min-width: 100%; table-layout: fixed; }
+  /* Let the table fit naturally without forcing horizontal scroll */
+  .table-wrap { overflow-x: auto; } 
+  table { min-width: 600px; } /* Keeps columns readable, allows swipe if needed */
   
-  /* Hide the "Code" column on mobile to save space */
-  th:nth-child(1), td:nth-child(1) { display: none; } 
+  th, td { padding: 8px 4px; font-size: 0.8rem; }
   
-  th, td { padding: 6px 2px; font-size: 0.75rem; word-wrap: break-word; }
+  /* Actions column styling */
+  .actions-cell { display: flex; flex-direction: column; gap: 4px; }
+  .small-btn { padding: 5px; font-size: 0.7rem; margin-right: 0; width: 100%; text-align: center; }
   
-  /* Shrink Action Buttons */
-  .actions-cell { white-space: normal; display: flex; flex-direction: column; gap: 4px; }
-  .small-btn { padding: 4px; font-size: 0.65rem; margin-right: 0; width: 100%; text-align: center; }
-  
-  /* Stats Boxes */
-  .stats { gap: 4px; margin-top: 10px; flex-wrap: wrap; }
-  .stat { padding: 8px 4px; min-width: 45%; border-radius: 6px; }
-  .stat strong { font-size: 1.1rem; }
+  /* Stats boxes wrap to a 2x2 grid */
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .stat { padding: 10px 5px; min-width: 0; border-radius: 6px; }
+  .stat strong { font-size: 1.2rem; }
 }
 </style>
 </head>
@@ -139,7 +137,7 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam In</th><th>Study Hrs</th><th>Actions</th></tr>
+          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Countdwon</th><th>Study Hrs</th><th>Actions</th></tr>
         </thead>
         <tbody id="recordsBody"></tbody>
       </table>
@@ -242,18 +240,35 @@
     save(); renderSemesterDropdown(); render();
   }
 
-  function getDaysLeft(dateStr) {
-    if (!dateStr) return '<span class="exam-passed">—</span>';
-    const today = new Date(); today.setHours(0,0,0,0);
-    const exam = new Date(dateStr); exam.setHours(0,0,0,0);
-    const diffDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+function getDaysLeft(dateStr) {
+  if (!dateStr) return '<span class="exam-passed">—</span>';
+  
+  // Set the exam date to 8:00 AM on the day of the exam
+  const exam = new Date(dateStr);
+  exam.setHours(8, 0, 0, 0); 
+  
+  const now = new Date();
+  const diffMs = exam - now;
 
-    if (diffDays < 0) return `<span class="exam-passed">Passed</span>`;
-    if (diffDays === 0) return `<span class="exam-red">Today!</span>`;
-    if (diffDays <= 7) return `<span class="exam-red">${diffDays} days</span>`;
-    if (diffDays <= 14) return `<span class="exam-orange">${diffDays} days</span>`;
-    return `<span class="exam-normal">${diffDays} days</span>`;
-  }
+  if (diffMs < 0) return `<span class="exam-passed">Passed</span>`;
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+  const mins = Math.floor((diffMs / 1000 / 60) % 60);
+  const secs = Math.floor((diffMs / 1000) % 60);
+
+  // Formatting the time with leading zeros (e.g., 04h 09m)
+  const format = (num) => num.toString().padStart(2, '0');
+  
+  // Color coding based on how close it is
+  let colorClass = 'exam-normal';
+  if (days === 0 && hours < 24) colorClass = 'exam-red';
+  else if (days < 3) colorClass = 'exam-orange';
+
+  return `<span class="${colorClass}" style="font-family: monospace; font-size: 0.9rem;">
+    ${days}d ${format(hours)}h ${format(mins)}m ${format(secs)}s
+  </span>`;
+}
 
   function exportCSV() {
     const records = getRecords();
@@ -399,7 +414,7 @@
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=36');
+    navigator.serviceWorker.register('sw.js?v=38');
   }
 
 function updateNotificationsButton(){
@@ -470,6 +485,16 @@ function toggleNotifications(){
   checkUpcomingExams();
   updateNotificationsButton();
   renderSemesterDropdown();
+
+  setInterval(()=>{
+    const records = =getRecords();
+    records.forEach(r=>{
+      if(r.examDate){
+        const cell = =document.querySelector(`#row-${r.id}td:nth-child(5)`);
+        if (cell) cell.innerHTML = getDaysLeft(r.examDate);
+      }
+    });
+  }1000);
   render();
 </script>
 </body>
