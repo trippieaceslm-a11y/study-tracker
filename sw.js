@@ -1,4 +1,4 @@
-Dkconst CACHE_NAME = 'study-tracker-v11'; // BUMP THIS EVERY UPDATE
+Dkconst CACHE_NAME = 'study-tracker-v12'; // BUMP THIS EVERY UPDATE
 const ASSETS = [
   './',
   './index.html',
