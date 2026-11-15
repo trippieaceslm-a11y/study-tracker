@@ -399,41 +399,44 @@
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=35');
+    navigator.serviceWorker.register('sw.js?v=36');
   }
 
 function updateNotificationsButton(){
   const btn = document.getElementById('notifyBtn');
-  if (!btn)return;
+  if (!btn) return;
 
-  if(Notification.permission ==="granted" && localStorage.getItem('alertsOff')!=='true'){
-    btn.innerHTML="🔔Alerts:ON";
-    btn.style.color="#28a745";
-    btn.style.borderColor="#28a745";
-  }else{
-    btn.innerHTML="🔕Alerts:OFF";
-    btn.style.color="#ff4444";
-    brn.style.borderColor="#f4444";
+  if (Notification.permission === "granted" && localStorage.getItem('alertsOff') !== 'true') {
+    btn.innerHTML = "🔔Alerts:ON";
+    btn.style.color = "#28a745";
+    btn.style.borderColor = "#28a745";
+  } else {
+    btn.innerHTML = "🔕Alerts:OFF";
+    btn.style.color = "#ff4444";
+    btn.style.borderColor = "#ff4444";
   }
 }
+
 function toggleNotifications(){
-  if(!("Notifications"in window)){
+  if (!("Notifications" in window)) {
     alert("This browser does not support notifications.");
     return;
   }
-  const isOff =localStorage.getItem('alertsOff')==='true';
-  if(isOff){
-    localStorage.setItem('alertsOff','false');
-    i(Notification.permission !=="granted"){
-      Notification.requestPermission().then(()==>updateNotificationsButton());
-    }else{
+
+  const isOff = localStorage.getItem('alertsOff') === 'true';
+  if (isOff) {
+    localStorage.setItem('alertsOff', 'false');
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then(() => updateNotificationsButton());
+    } else {
       updateNotificationsButton();
     }
-  }else{
-    localStorage.setItem('alertsOff','true');
+  } else {
+    localStorage.setItem('alertsOff', 'true');
     updateNotificationsButton();
   }
 }
+
   function checkUpcomingExams(){
     if(localStorage.getItem('alertsOff')==='true')return;
     if (Notification.permission !=="granted") return;
