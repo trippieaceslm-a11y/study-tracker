@@ -1,10 +1,7 @@
-const CACHE_NAME = 'study-tracker-v11';
+const CACHE_NAME = 'study-tracker-v33';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/android-chrome-192x192.png',
-  '/android-chrome-512x512.png'
+  './',
+  './index.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -17,21 +14,16 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) return caches.delete(cache);
-        })
-      );
-    }).then(() => self.clients.claim())
-  );
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    fetch(event.request).catch(() => {
+      return caches.match(event.request).then((response) => {
+        // If we are offline and looking for a page, show index.html
+        return response || caches.match('./index.html');
+      });
     })
   );
 });
