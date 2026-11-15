@@ -1,4 +1,4 @@
-const CACHE_NAME = 'study-tracker-v13';
+const CACHE_NAME = 'study-tracker-v11';
 const ASSETS = [
   '/',
   '/index.html',
