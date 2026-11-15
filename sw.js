@@ -1,39 +1,37 @@
-Dkconst CACHE_NAME = 'study-tracker-v12'; // BUMP THIS EVERY UPDATE
+const CACHE_NAME = 'study-tracker-v13';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/android-chrome-192x192.png',
+  '/android-chrome-512x512.png'
 ];
 
-self.addEventListener('install', (e) => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
   );
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) return caches.delete(cache);
         })
       );
     }).then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    fetch(e.request).catch(() => {
-      return caches.match(e.request).then((response) => {
-        if (response) return response;
-        // If navigating to a page and offline, fallback to index.html
-        if (e.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
