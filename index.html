@@ -414,7 +414,7 @@ function getDaysLeft(dateStr) {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=38');
+    navigator.serviceWorker.register('sw.js?v=39');
   }
 
 function updateNotificationsButton(){
@@ -486,15 +486,15 @@ function toggleNotifications(){
   updateNotificationsButton();
   renderSemesterDropdown();
 
-  setInterval(()=>{
-    const records = =getRecords();
-    records.forEach(r=>{
-      if(r.examDate){
-        const cell = =document.querySelector(`#row-${r.id}td:nth-child(5)`);
+  setInterval(() => {
+    const records = getRecords();
+    records.forEach(r => {
+      if (r.examDate) {
+        const cell = document.querySelector(`#row-${r.id} td:nth-child(5)`);
         if (cell) cell.innerHTML = getDaysLeft(r.examDate);
       }
     });
-  }1000);
+  }, 1000);
   render();
 </script>
 </body>
