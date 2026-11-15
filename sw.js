@@ -1,4 +1,4 @@
-const CACHE_NAME = 'study-tracker-v9'; // Change this number every time you update!
+const CACHE_NAME = 'study-tracker-v10'; // Change this number every time you update!
 const ASSETS = [
   './',
   './index.html',

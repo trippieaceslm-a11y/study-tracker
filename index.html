@@ -59,34 +59,42 @@
   .exam-normal { color: #000; font-weight: bolder; }
   .exam-passed { color: #29a744; }
 
-  @media (max-width: 600px) {
-    body { margin: 10px auto; padding: 0 10px; }
-    h1 { font-size: 1.3rem; }
-    h2 { font-size: 0.85rem; margin-bottom: 10px; }
-    .card { padding: 12px; margin-bottom: 10px; border-radius: 8px; }
-    
-    .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
-    .semester-selector { justify-content: space-between; font-size: 0.9rem; }
-    .semester-selector select, .semester-selector button { padding: 4px 8px; font-size: 0.85rem; }
-    .btn-group { width: 100%; }
-    .btn-group button { flex: 1; padding: 6px; font-size: 0.8rem; }
-    
-    .form-row { flex-direction: column; gap: 8px; }
-    .form-row input, .form-row select { width: 100% !important; flex: none !important; padding: 10px; font-size: 1rem; }
-    .form-row button { padding: 10px; font-size: 1rem; width: 100%; }
-    
-    th:nth-child(1), td:nth-child(1) { display: none; }
-    
-    table { min-width: 100%; }
-    th, td { padding: 6px 4px; font-size: 0.8rem; }
-    
-    .actions-cell { display: flex; flex-direction: column; gap: 4px; }
-    .small-btn { padding: 3px 6px; font-size: 0.7rem; margin-right: 0; text-align: center; }
-    
-    .stats { gap: 5px; margin-top: 10px; flex-wrap: nowrap; }
-    .stat { padding: 8px 4px; min-width: 0; border-radius: 6px; }
-    .stat strong { font-size: 1rem; }
-  }
+@media (max-width: 600px) {
+  body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
+  h1 { font-size: 1.3rem; }
+  h2 { font-size: 0.85rem; margin-bottom: 10px; }
+  .card { padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+  
+  /* Top Controls */
+  .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+  .semester-selector { justify-content: space-between; font-size: 0.9rem; flex-wrap: wrap; }
+  .semester-selector select, .semester-selector button { padding: 4px 8px; font-size: 0.8rem; }
+  .btn-group { width: 100%; display: flex; gap: 5px; }
+  .btn-group button { flex: 1; padding: 6px; font-size: 0.8rem; }
+  
+  /* Stack Form Inputs vertically so they fit */
+  .form-row { flex-direction: column; gap: 6px; }
+  .form-row input, .form-row select { width: 100% !important; flex: none !important; padding: 8px; font-size: 0.9rem; }
+  .form-row button { padding: 8px; font-size: 0.9rem; width: 100%; }
+  
+  /* Make Table fit the screen */
+  .table-wrap { overflow-x: hidden; } /* Stop side scrolling */
+  table { min-width: 100%; table-layout: fixed; }
+  
+  /* Hide the "Code" column on mobile to save space */
+  th:nth-child(1), td:nth-child(1) { display: none; } 
+  
+  th, td { padding: 6px 2px; font-size: 0.75rem; word-wrap: break-word; }
+  
+  /* Shrink Action Buttons */
+  .actions-cell { white-space: normal; display: flex; flex-direction: column; gap: 4px; }
+  .small-btn { padding: 4px; font-size: 0.65rem; margin-right: 0; width: 100%; text-align: center; }
+  
+  /* Stats Boxes */
+  .stats { gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+  .stat { padding: 8px 4px; min-width: 45%; border-radius: 6px; }
+  .stat strong { font-size: 1.1rem; }
+}
 </style>
 </head>
 <body>
