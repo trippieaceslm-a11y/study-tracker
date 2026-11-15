@@ -110,7 +110,7 @@
       <button class="btn-outline small-btn" onclick="deleteSemester()" style="color: #ff4444; border-color: #ff4444;">🗑️ Del</button>
     </div>
     <div class="btn-group">
-      <button class="btn-outline" onclick="enableNotifications()">🔔Enable Alerts</button>
+      <button class="btn-outline" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
       <button class="btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
       <button class="btn-outline" onclick="resetToDefaults()">↻ Reset Sem</button>
     </div>
@@ -399,26 +399,43 @@
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=34');
+    navigator.serviceWorker.register('sw.js?v=35');
   }
 
-  function enableNotifications(){
-    if(!("Notification"in window)){
-      alert("This browser does not suport notifications.");
-      return;
+function updateNotificationsButton(){
+  const btn = document.getElementById('notifyBtn');
+  if (!btn)return;
+
+  if(Notification.permission ==="granted" && localStorage.getItem('alertsOff')!=='true'){
+    btn.innerHTML="🔔Alerts:ON";
+    btn.style.color="#28a745";
+    btn.style.borderColor="#28a745";
+  }else{
+    btn.innerHTML="🔕Alerts:OFF";
+    btn.style.color="#ff4444";
+    brn.style.borderColor="#f4444";
+  }
+}
+function toggleNotifications(){
+  if(!("Notifications"in window)){
+    alert("This browser does not support notifications.");
+    return;
+  }
+  const isOff =localStorage.getItem('alertsOff')==='true';
+  if(isOff){
+    localStorage.setItem('alertsOff','false');
+    i(Notification.permission !=="granted"){
+      Notification.requestPermission().then(()==>updateNotificationsButton());
+    }else{
+      updateNotificationsButton();
     }
-
-    Notification.requestPermission().then((permission)=>{
-      if (permission==="granted"){
-        alert("Alerts enabled!Wewill notify you when an exam is less than 2 days away.");
-        checkUpcomingExams();
-      }else{
-        alert("Alerts denied.You won't get notified.")
-      }
-    });
+  }else{
+    localStorage.setItem('alertsOff','true');
+    updateNotificationsButton();
   }
-
+}
   function checkUpcomingExams(){
+    if(localStorage.getItem('alertsOff')==='true')return;
     if (Notification.permission !=="granted") return;
 
     const records = getRecords();
@@ -448,7 +465,7 @@
   }
 
   checkUpcomingExams();
-
+  updateNotificationsButton();
   renderSemesterDropdown();
   render();
 </script>
