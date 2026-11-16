@@ -18,24 +18,24 @@
   .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid #000; font-weight: bold; color: #0066ff; }
   
   input, select, button { padding: 0.6rem; font-size: 1rem; border-radius: 6px; border: 1px solid #000; }
-  button { background: #0066ff; color: white; border: none; cursor: pointer; font-weight: bolder; }
+  button { background: #000; color: white; border: round; cursor: pointer; font-weight: bolder; }
   button:hover { background: green; }
   
   .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .btn-outline { background: white; color: #0066ff; border: 1px solid #0066ff; }
+  .btn-outline { background: whitesmoke; color: #0066ff; border: 1px solid #0066ff; }
   .btn-outline:hover { background: #e8f0ff; }
   
   .small-btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; margin-right: 4px; white-space: nowrap; border-radius: 4px; }
-  .delete-btn { background: darkred; }
-  .delete-btn:hover { background: darksalmon; }
+  .delete-btn { background: black; }
+  .delete-btn:hover { background: red; }
   .edit-btn { background: black; }
   .edit-btn:hover { background: green; }
   .log-btn { background: #000; }
-  .log-btn:hover { background: dimgray; }
+  .log-btn:hover { background: blue; }
   .save-btn { background: #000; }
-  .save-btn:hover { background: #1e7e34; }
+  .save-btn:hover { background: blue; }
   .clear-btn { background: #000; }
-  .clear-btn:hover { background: #117a8b; }
+  .clear-btn:hover { background: blue; }
   
   .table-wrap { overflow-x: auto; width: 100%; margin-top: 1rem; }
   table { width: 100%; border-collapse: collapse; min-width: 800px; }
@@ -55,12 +55,52 @@
   .course-code { color: #000; font-size: 0.85rem; }
   
   .unit-subtext { display: block; color: #000; font-size: 0.8rem; margin-top: 4px; font-style: italic; }
+  .progress-container{width: 100%; background: #eee; border-radius: 4px; height: 8px; margin-top: 4px; overflow: hidden;}
+  progress-fill{height:100%; border-radius: 4px; transition: width 03s ease;}
   .exam-red { color: #ff0000; font-weight: bolder; }
   .exam-orange { color: #f0a500; font-weight: bolder; }
-  .exam-normal { color: #000; font-weight: bolder; }
-  .exam-passed { color: #29a744; }
+  .exam-normal { color: #7dd30c; font-weight: bolder; }
+  .exam-passed { color: #000000; }
 
-@media (max-width: 600px) {
+  /*Today's Focus Style */
+  .focus-item{display: flex;justify-content: space-between;align-items: center;padding: 10px;background: #f9f9f9;border-radius: 6px;border-left: 4px solid #0066ff;}
+  .focus-title{font-weight: bolder;font-size: 0.95rem;}
+  .focus-reason{font-size: 0.8rem;font-weight: bolder;padding: 4px 8px;border-radius: 12px;background: :#e8f0ff;color:#0066ff;}
+  .focus-urgent{background: #ffe6e6;color: #ff0000;}
+
+  /*Dark Mode Override for Focus*/
+  body.dark-mode.focus-item{background: #2d2d2d;border-left-color: #66b2ff;}
+  body.dar-mode.focus-reason{background: #1e3a5f;color: #66b2ff;}
+  body.dark-mode.focus-urgent{background: #5c1a1a;color: #ff6666;}
+
+/* DARK MODE OVERRIDES (Sleek & Clean) */
+body.dark-mode { background: #121212 !important; color: #e0e0e0; }
+body.dark-mode .card { background: #1e1e1e !important; box-shadow: 0 2px 8px rgba(255,255,255,0.05); border: 1px solid #333; }
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #ffffff; }
+
+/* Table Colors */
+body.dark-mode th { background: #2d2d2d !important; color: #bbb; border-bottom: 2px solid #444; }
+body.dark-mode td { border-bottom: 1px solid #333; color: #e0e0e0; }
+body.dark-mode .course-code { color: #888 !important; } /* Makes the code readable */
+
+/* Inputs and Buttons */
+body.dark-mode input, body.dark-mode select { background: #2d2d2d !important; color: white; border: 1px solid #444; }
+body.dark-mode button { background: #333 !important; border-color: #555; color: #fff; }
+body.dark-mode button:hover { background: #444 !important; }
+
+/* Stats Boxes */
+body.dark-mode .stat { background: #2d2d2d !important; color: #e0e0e0; }
+body.dark-mode .stat.study-stat { background: #3e2a4d !important; }
+body.dark-mode .stat strong { color: #66b2ff; }
+
+/* Misc */
+body.dark-mode .progress-container { background: #444; }
+body.dark-mode .unit-subtext { color: #aaa; }
+body.dark-mode #semesterModal > div { background: #1e1e1e !important; color: white; }
+body.dark-mode #newSemesterName { background: #2d2d2d !important; color: white; border-color: #555; }
+
+
+  @media (max-width: 600px) {
   body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
   h1 { font-size: 1.3rem; }
   h2 { font-size: 0.85rem; margin-bottom: 10px; }
@@ -111,6 +151,7 @@
       <button class="btn-outline" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
       <button class="btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
       <button class="btn-outline" onclick="resetToDefaults()">↻ Reset Sem</button>
+      <button class="btn-outline" onclick="toggleDarkMode()" id="themeBtn">🌙Dark</button>
     </div>
   </div>
 
@@ -122,6 +163,7 @@
       <input id="unitNames" placeholder="Unit Names (Optional)" />
       <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width: 70px; flex: none;" />
       <input id="examDate" type="date" title="Final Exam Date" style="flex: none;" />
+      <input id="studyGoal" type="number" placeholder="Goal Hrs" min="1" style="width:80px; flex: none;" title="Target Study Hours"/>
       <select id="status" style="flex: none; width: 120px;">
         <option value="In Progress">In Progress</option>
         <option value="Completed">Completed</option>
@@ -131,13 +173,17 @@
     </div>
   </div>
 
+  <div class="card" id="focusCard">
+    <h3>🎯Today's Focus</h3>
+    <div id="focusContent" style="display: flex;flex-direction: column;gap:8px;"></div>
+  </div>
   <div class="card">
     <h3>My Records</h3>
     
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Countdwon</th><th>Study Hrs</th><th>Actions</th></tr>
+          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Countdown</th><th>Study Progress</th><th>Actions</th></tr>
         </thead>
         <tbody id="recordsBody"></tbody>
       </table>
@@ -302,11 +348,12 @@ function getDaysLeft(dateStr) {
     const unitNames = document.getElementById('unitNames').value.trim();
     const units = parseFloat(document.getElementById('units').value);
     const examDate = document.getElementById('examDate').value;
+    const studyGoal = parseFloat(document.getElementById('studyGoal').value)||10;
     const status = document.getElementById('status').value;
     
     if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
     
-    getRecords().push({ id: Date.now(), code: code, name, unitNames, units, examDate, status, studyHours: 0 });
+    getRecords().push({ id: Date.now(), code: code, name, unitNames, units, examDate, status, studyHours: 0, studyGoal:studyGoal });
     save(); render();
     
     document.getElementById('code').value = '';
@@ -314,6 +361,7 @@ function getDaysLeft(dateStr) {
     document.getElementById('unitNames').value = '';
     document.getElementById('units').value = '';
     document.getElementById('examDate').value = '';
+    document.getElementById('studyGoal').value = '';
   }
 
   function clearRecordData(id) {
@@ -348,7 +396,9 @@ function getDaysLeft(dateStr) {
         </select>
       </td>
       <td><input id="edit-examdate-${id}" type="date" value="${rec.examDate || ''}" style="width: 120px;"></td>
-      <td>${rec.studyHours || 0}</td>
+      <td>
+        <div>${rec.studyHours || 0}/<input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}" style="width:50px; padding:2px;"></div>
+        </td>
       <td class="actions-cell">
         <button class="small-btn save-btn" onclick="saveEdit(${id})">Save</button>
         <button class="small-btn" onclick="render()">Cancel</button>
@@ -365,6 +415,8 @@ function getDaysLeft(dateStr) {
     if (!isNaN(u) && u >= 0) rec.units = u;
     rec.status = document.getElementById(`edit-status-${id}`).value;
     rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
+    const goal = parselFloat(document.getElementById(`edit-goal-${id}`).value);
+    if(!isNaN(goal)&& goal>0)rec.studyGoal = goal;
     save(); render();
   }
 
@@ -375,6 +427,63 @@ function getDaysLeft(dateStr) {
     }));
     save(); render();
   }
+
+  function renderFocusDashboard() {
+  const container = document.getElementById('focusContent');
+  const records = getRecords();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  // Find courses that are "In Progress" OR have an exam in the next 7 days
+  const focusCourses = records.filter(r => {
+    if (r.status === 'In Progress') return true;
+    if (r.examDate) {
+       const exam = new Date(r.examDate);
+       exam.setHours(0,0,0,0);
+       const diffDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+       return diffDays >= 0 && diffDays <= 7;
+    }
+    return false;
+  });
+
+  // Sort by closest exam date first
+  focusCourses.sort((a, b) => {
+    if (!a.examDate) return 1;
+    if (!b.examDate) return -1;
+    return new Date(a.examDate) - new Date(b.examDate);
+  });
+
+  if (focusCourses.length === 0) {
+    container.innerHTML = `<p style="color: #28a745; font-weight: bold; margin: 0;">You're all caught up! No active courses or upcoming exams this week. 🎉</p>`;
+    return;
+  }
+
+  container.innerHTML = focusCourses.map(r => {
+    let reasonHtml = `<span class="focus-reason">In Progress</span>`;
+    
+    // If there's an exam, override the reason to show the exam countdown
+    if (r.examDate) {
+        const exam = new Date(r.examDate);
+        exam.setHours(0,0,0,0);
+        const diffDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+          reasonHtml = `<span class="focus-reason focus-urgent">Exam TODAY!</span>`;
+        } else if (diffDays <= 7) {
+          reasonHtml = `<span class="focus-reason focus-urgent">Exam in ${diffDays} days</span>`;
+        }
+    }
+    
+    return `
+      <div class="focus-item">
+        <div class="focus-title">
+          ${r.code ? r.code + ' - ' : ''}${r.name}
+        </div>
+        ${reasonHtml}
+      </div>
+    `;
+  }).join('');
+}
 
   function render() {
     const records = getRecords();
@@ -393,7 +502,14 @@ function getDaysLeft(dateStr) {
           <td>${r.units}</td>
           <td>${r.status}</td>
           <td>${getDaysLeft(r.examDate)}</td>
-          <td><strong>${r.studyHours || 0}</strong></td>
+          <td>
+            <div style="font-size:0.85rem;margin-bottom:2px;">
+            <strong>${r.studyHours || 0}</strong>/${r.studyGoal || 10}hrs
+            </div>
+            <div class="progress-container">
+              <div class="progress-fill" style="width:$Math.min(((r.studyHours || 0) / (r.studyGoal || 10)) *100,100)}%;background:${(r.studyHours || 0)>=(r.studyGoal || 10)? '#28a745':'#0066ff'};"></div>
+                </div>
+            </td>
           <td class="actions-cell">
             <button class="small-btn log-btn" onclick="logHours(${r.id})">⏱️ Log</button>
             <button class="small-btn edit-btn" onclick="startEdit(${r.id})">Edit</button>
@@ -414,7 +530,9 @@ function getDaysLeft(dateStr) {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=39');
+    navigator.serviceWorker.register('sw.js?v=40');
+
+    renderFocusDashboard();
   }
 
 function updateNotificationsButton(){
@@ -483,6 +601,32 @@ function toggleNotifications(){
   }
 
   checkUpcomingExams();
+
+  // ---DARK MODE LOGIC--- //
+
+  function toggleDarkMode(){
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode',isDark);
+    updateThemeButton();
+  }
+  function updateThemeButton(){
+    const btn = document.getElementById('themeBtn');
+    if(!btn)return;
+    if(document.body.classList.contains('dark-mode')){
+      bnt.innerHMTL = "☀️Light";
+    }else{
+      btn.innerHMTL = "🌙Dark";
+    }
+  }
+
+  // CHECK saved theme preference on load //
+
+  if(localStorage.getItem('darkMode')==='true'){
+    document.body.classList.add('dark-mode');
+  }
+  updateThemeButton();
+
   updateNotificationsButton();
   renderSemesterDropdown();
 
