@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Semester Unit Tracker — Math & CS</title>
+<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-app-compact.js"></script>
+<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-firestore-compact.js"></script>
+
 <link rel="icon" href="/android-chrome-192x192.png">
 <link rel="manifest" href="Manifest.json">
 <style>
@@ -65,7 +69,7 @@
   /*Today's Focus Style */
   .focus-item{display: flex;justify-content: space-between;align-items: center;padding: 10px;background: #f9f9f9;border-radius: 6px;border-left: 4px solid #0066ff;}
   .focus-title{font-weight: bolder;font-size: 0.95rem;}
-  .focus-reason{font-size: 0.8rem;font-weight: bolder;padding: 4px 8px;border-radius: 12px;background: :#e8f0ff;color:#0066ff;}
+  .focus-reason{font-size: 0.8rem;font-weight: bolder;padding: 4px 8px;border-radius: 12px;background: #e8f0ff;color:#0066ff;}
   .focus-urgent{background: #ffe6e6;color: #ff0000;}
 
   /*Dark Mode Override for Focus*/
@@ -141,6 +145,13 @@ body.dark-mode #newSemesterName { background: #2d2d2d !important; color: white; 
   <h2>Bachelor in Mathematics and Computer Science</h2>
 
   <div class="card top-controls">
+    <div id="auth-container" style="display: flex;align-items: center;gap: 10px;margin-bottom: 10px;width: 100%;justify-content: flex-end;">
+      <button id="loginBtn" class="btn-outline" onclick="signIn()" style="background: #4285F4; color: white;border: none;">Sign in with Google</button>
+      <div id="userinfo" style="display: none;align-items: center;gap: 10px;">
+        <span id="userName" style="font-weight: bolder; color: white;"></span>
+        <button class="btn-outline" onclick="signOut()" style="padding: 4px 8px;font-size: 0.8rem;">Logout</button>
+      </div>
+    </div>
     <div class="semester-selector">
       <label>📅 Semester:</label>
       <select id="semesterSelect" onchange="switchSemester(this.value)"></select>
@@ -222,19 +233,31 @@ body.dark-mode #newSemesterName { background: #2d2d2d !important; color: white; 
   ];
 
   const STORAGE_KEY = 'semesterRecords_v3';
-  let appData = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-  
-  if (!appData || !appData.semesters) {
-    appData = {
-      activeSemester: 'Semester 1',
-      semesters: {
-        'Semester 1': DEFAULT_COURSES.map((c, i) => ({ id: Date.now() + i, ...c, studyHours: 0, unitNames: '', examDate: '' }))
-      }
-    };
-    save();
-  }
+  //---FireBase SetUp---//
+const firebaseConfig = {
+  apiKey: "AIzaSyDTYRpVcDOjGEglChSQFfYDSy-S2CmJRYA",
+  authDomain: "study-tracker-1980.firebaseapp.com",
+  projectId: "study-tracker-1980",
+  storageBucket: "study-tracker-1980.firebasestorage.app",
+  messagingSenderId: "189368177608",
+  appId: "1:189368177608:web:7cfd24a9f2fe1d326fe6fd"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
+db.enable.Persistence().catch((err) =>{console.log("Offline persistence error:",err.code);});
+
+let currentUser = null;
+let appData = JSON.parsel(localStorage.getItem(STORAGE_KEY) || 'null');
+
+
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); 
+
+    if(currentUser){
+      db.collection('users').doc(currentUser.uid).set(appData).catch(e => console.error("Error saving to cloud:",e));
+    }
+  }
   function getRecords() { return appData.semesters[appData.activeSemester] || []; }
 
   function renderSemesterDropdown() {
@@ -530,7 +553,7 @@ function getDaysLeft(dateStr) {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=40');
+    navigator.serviceWorker.register('sw.js?v=41');
 
     renderFocusDashboard();
   }
@@ -628,6 +651,51 @@ function toggleNotifications(){
   updateThemeButton();
 
   updateNotificationsButton();
+
+  //---Authentication & Cloud Sync---//
+  function signIn(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(e => alert('Login failed: ' + e.message));
+  }
+  function signOut(){
+    auth.signOut();
+  }
+
+  auth.onAuthStateChange((user) =>{
+    if(user){
+      currentUser = user;
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('userInfo').style.display = 'flex';
+      document.getElementById('userName').textContent = user.displayName.split('')[0];
+
+      db.collection('users').doc(user.uid).onSnapshot((doc) =>{
+        if(doc.exists){
+          appData = doc.data();
+          localStorage.setItem(STORAGE_KEY,JSON.stringify(appData));
+          renderSemesterDropdown();
+          render();
+        }else{
+          save();
+          renderSemesterDropdown();
+          render();
+        }
+      });
+    }else{
+      currentUser = null;
+      document.getElementById('loginBtn').style.display ='block';
+      document.getElementById('userInfo').style.display ='none';
+
+      appData = JSON.parsel(localStorage.getItem(STORAGE_KEY) ||'null');
+      if(!appData || !appData.semesters){
+         appData = {
+          activeSemester:'Semester 1',
+          semesters:{'Semester 1':DEFAULT_COURSES.map((c,i)=>({id:Date.now()+ i,...c,studyHours:0,studyGoal:10,unitNames:",examDate:"}))}
+         };
+      }
+      renderSemesterDropdown();
+      render();
+    }
+  });
   renderSemesterDropdown();
 
   setInterval(() => {
