@@ -25,22 +25,6 @@
   h2 { color: var(--coral); font-size: 1rem; font-weight: bolder; margin-top: 0; }
   .card { background: var(--card); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--line); border-top: 3px solid var(--coral); box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
 
-  /* Quick Dashboard Grid & Clickable Nav */
-  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
-  .dash-card { background: var(--card2); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid var(--line); border-top: 3px solid var(--coral); }
-  .dash-card h3 { margin: 0 0 0.35rem; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; }
-  .dash-card p { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--coral); }
-  .dash-card.study-dash { border-top-color: var(--forest); }
-  .dash-card.study-dash p { color: var(--forest-l); }
-
-  .quick-nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem; }
-  .quick-nav-btn {
-    background: var(--card2); border: 1px solid var(--line); padding: 0.85rem 1rem;
-    color: var(--ink); text-align: left; border-radius: 8px; cursor: pointer;
-    font-size: 0.95rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center;
-  }
-  .quick-nav-btn:hover { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
-
   .top-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
   .semester-selector { display: flex; gap: 0.5rem; align-items: center; font-weight: bold; flex-wrap: wrap; }
   .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid var(--coral); font-weight: bold; color: var(--ink); }
@@ -93,15 +77,17 @@
 
   #semesterModal > div { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line); }
 
+  /* Collapsible Header Styles */
+  .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding-bottom: 10px; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+  .collapsible-header:hover { border-bottom-color: var(--line); }
+  .collapsible-header h3 { margin: 0; }
+  .collapsible-icon { font-size: 1.2rem; transition: transform 0.3s ease; }
+
   @media (max-width: 600px) {
     body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
     h1 { font-size: 1.3rem; }
     h2 { font-size: 0.85rem; margin-bottom: 10px; }
     .card { padding: 12px; margin-bottom: 10px; border-radius: 8px; }
-    .dash-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .dash-card { padding: 0.75rem 0.5rem; }
-    .dash-card p { font-size: 1.25rem; }
-    .quick-nav { grid-template-columns: 1fr; }
     .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
     .semester-selector { justify-content: space-between; font-size: 0.9rem; flex-wrap: wrap; gap: 5px; }
     .semester-selector select { flex: 1; padding: 6px; }
@@ -120,54 +106,11 @@
     .stat { padding: 10px 5px; min-width: 0; border-radius: 6px; }
     .stat strong { font-size: 1.2rem; }
   }
-
-  .dashboard-grid{display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 0.75rem; margin-bottom: 1rem;}
-  .dash-card{background: var(--card2); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid var(--line);
-  border-top: 3px solid var(--coral);}
-  .dash-card h3{margin: 0 0 0.35rem; font-size: 0.8rem; color: var(--muted); text-transform: uppercase;}
-  .dash-card p{margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--coral);}
-  .dash-card.dash-card.study-dash{border-top-color: var(--forest);}
-  .dash-card.study-dash p{color: var(--forest-l);}
-
-  .quick-nav{display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem;}
-  .quick-nav-btn{
-    background: var(--card2); border: 1px solid var(--line); padding: 0.85rem 1rem;
-    color: var(--ink); text-align: left; border-radius: 8px; cursor: pointer;
-    font-size: 0.95rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center;
-  }
-  .quick-nav-btn:hover{background: var(--coral); border-color: var(--coral);color: var(--navy-ink);}
 </style>
 </head>
 <body>
   <h1>📚 Semester Unit Tracker</h1>
   <h2>Bachelor in Mathematics and Computer Science</h2>
-  <div class="card" id="quickDashboard">
-    <div class="dash-grid">
-      <div class="dash-card"><h3>Total Units</h3><p id="dashTotalUnits">0</p></div>
-      <div class="dash-card"><h3>Upcoming Exams</h3><p id="dashInProgress">0</p></div>
-      <div class="dash-card study-dash"><h3>Study Hrs</h3><p id="dashStudyHrs">0</p></div>
-    </div>
-    <div class="quick-nav">
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('recordsSection')"><span>📚Units & Records</span>➡️</button>
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('focusCard')"><span>⌛Exam & Focus</span>➡️</button>
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('addRecordSection')"><span>➕Add Course</span>➡️</button>
-    </div>
-  </div>
-
-  <!-- Clean Dashboard Overview + Clickable Shortcuts -->
-  <div class="card" id="quickDashboard">
-    <div class="dash-grid">
-      <div class="dash-card"><h3>Total Units</h3><p id="dashTotalUnits">0</p></div>
-      <div class="dash-card"><h3>Upcoming Exams</h3><p id="dashUpcomingExams">0</p></div>
-      <div class="dash-card"><h3>In Progress</h3><p id="dashInProgress">0</p></div>
-      <div class="dash-card study-dash"><h3>Study Hrs</h3><p id="dashStudyHrs">0</p></div>
-    </div>
-    <div class="quick-nav">
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('recordsSection')"><span>📚 Units & Records</span> ➔</button>
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('focusCard')"><span>⏳ Exam & Focus</span> ➔</button>
-      <button type="button" class="quick-nav-btn" onclick="jumpToSection('addRecordSection')"><span>➕ Add Course</span> ➔</button>
-    </div>
-  </div>
 
   <div class="card top-controls">
     <div id="auth-container" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;width:100%;justify-content:flex-end;">
@@ -191,21 +134,27 @@
     </div>
   </div>
 
+  <!-- Collapsible Add Course Section -->
   <div class="card" id="addRecordSection">
-    <h3>Add a Course / Study Record</h3>
-    <div class="form-row">
-      <input id="code" placeholder="Code (e.g. AMA4312)" style="flex:none;width:140px;text-transform:uppercase;" />
-      <input id="name" placeholder="Course Name (e.g. Linear Algebra)" />
-      <input id="unitNames" placeholder="Unit Names (Optional)" />
-      <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width:70px;flex:none;" />
-      <input id="examDate" type="date" title="Final Exam Date" style="flex:none;" />
-      <input id="studyGoal" type="number" placeholder="Goal Hrs" min="1" style="width:80px;flex:none;" title="Target Study Hours" />
-      <select id="status" style="flex:none;width:120px;">
-        <option value="In Progress">In Progress</option>
-        <option value="Completed">Completed</option>
-        <option value="Planned">Planned</option>
-      </select>
-      <button onclick="addRecord()">Add</button>
+    <div class="collapsible-header" onclick="toggleSection('addRecordContent', 'addRecordIcon')">
+      <h3>➕ Add a Course / Study Record</h3>
+      <span class="collapsible-icon" id="addRecordIcon">▼</span>
+    </div>
+    <div id="addRecordContent" style="display: none; margin-top: 15px;">
+      <div class="form-row">
+        <input id="code" placeholder="Code (e.g. AMA4312)" style="flex:none;width:140px;text-transform:uppercase;" />
+        <input id="name" placeholder="Course Name (e.g. Linear Algebra)" />
+        <input id="unitNames" placeholder="Unit Names (Optional)" />
+        <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width:70px;flex:none;" />
+        <input id="examDate" type="date" title="Final Exam Date" style="flex:none;" />
+        <input id="studyGoal" type="number" placeholder="Goal Hrs" min="1" style="width:80px;flex:none;" title="Target Study Hours" />
+        <select id="status" style="flex:none;width:120px;">
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="Planned">Planned</option>
+        </select>
+        <button onclick="addRecord()">Add</button>
+      </div>
     </div>
   </div>
 
@@ -214,21 +163,27 @@
     <div id="focusContent" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 
+  <!-- Collapsible My Records Section -->
   <div class="card" id="recordsSection">
-    <h3>My Records</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Countdown</th><th>Study Progress</th><th>Actions</th></tr>
-        </thead>
-        <tbody id="recordsBody"></tbody>
-      </table>
+    <div class="collapsible-header" onclick="toggleSection('recordsContent', 'recordsIcon')">
+      <h3>📚 My Records</h3>
+      <span class="collapsible-icon" id="recordsIcon">▼</span>
     </div>
-    <div class="stats">
-      <div class="stat">Total Units<strong id="totalUnits">0</strong></div>
-      <div class="stat">Completed<strong id="completedUnits">0</strong></div>
-      <div class="stat">In Progress<strong id="inProgressUnits">0</strong></div>
-      <div class="stat study-stat">Total Study Hrs<strong id="totalStudyHours">0</strong></div>
+    <div id="recordsContent" style="display: none; margin-top: 15px;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Countdown</th><th>Study Progress</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+      <div class="stats">
+        <div class="stat">Total Units<strong id="totalUnits">0</strong></div>
+        <div class="stat">Completed<strong id="completedUnits">0</strong></div>
+        <div class="stat">In Progress<strong id="inProgressUnits">0</strong></div>
+        <div class="stat study-stat">Total Study Hrs<strong id="totalStudyHours">0</strong></div>
+      </div>
     </div>
   </div>
 
@@ -245,11 +200,18 @@
   </div>
 
 <script>
-
-function jumpToSection(id){
-  const el = document.getElementById(id);
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-}
+  // --- UI Toggle Logic ---
+  function toggleSection(contentId, iconId) {
+    const content = document.getElementById(contentId);
+    const icon = document.getElementById(iconId);
+    if (content.style.display === 'none') {
+      content.style.display = 'block';
+      if (icon) icon.style.transform = 'rotate(180deg)';
+    } else {
+      content.style.display = 'none';
+      if (icon) icon.style.transform = 'rotate(0deg)';
+    }
+  }
 
   const DEFAULT_COURSES = [
     { code: 'AAB4301', name: 'RESEARCH METHODOLOGY',                   units: 3, status: 'Planned' },
@@ -263,11 +225,6 @@ function jumpToSection(id){
   ];
 
   const STORAGE_KEY = 'semesterRecords_v3';
-
-  function jumpToSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 
   function makeCourses() {
     return DEFAULT_COURSES.map((c, i) => ({
@@ -560,28 +517,17 @@ function jumpToSection(id){
     const totalUnitsVal = sum(records);
     const inProgressVal = sum(records.filter(r => r.status === 'In Progress'));
     const studyHrsVal = sumHours(records);
-    const upcomingExamsVal = records.filter(r => r.examDate && daysUntil(r.examDate) >= 0).length;
 
     document.getElementById('totalUnits').textContent      = totalUnitsVal;
     document.getElementById('completedUnits').textContent  = sum(records.filter(r => r.status === 'Completed'));
     document.getElementById('inProgressUnits').textContent = inProgressVal;
     document.getElementById('totalStudyHours').textContent = studyHrsVal;
 
-    document.getElementById('dashTotalUnits').textContent    = totalUnitsVal;
-    document.getElementById('dashUpcomingExams').textContent = upcomingExamsVal;
-    document.getElementById('dashInProgress').textContent    = inProgressVal;
-    document.getElementById('dashStudyHrs').textContent      = studyHrsVal;
-
-    document.getElementById('dashTotalUnits').textContent    = totalUnitsVal;
-    document.getElementById('dashUpcomingExams').textContent = records.filter(r => r.examDate && daysUntil(r.examDate) >= 0).length;
-    document.getElementById('dashInProgress').textContent    = inProgressVal;
-    document.getElementById('dashStudyHrs').textContent      = studyHrsVal;
-
     renderFocusDashboard();
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=43').catch(() => {});
+    navigator.serviceWorker.register('sw.js?v=55').catch(() => {});
   }
 
   // --- Notifications ---
