@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Semester Unit Tracker — Math & CS</title>
-<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-app-compact.js"></script>
-<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-<script src="https://wwww.gstatic.com/firebasejs/10.8.1/firebase-firestore-compact.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.8.1/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.8.1/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.8.1/firebase-firestore-compat.js"></script>
 
 <link rel="icon" href="/android-chrome-192x192.png">
 <link rel="manifest" href="Manifest.json">
@@ -245,8 +245,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-
-db.enable.Persistence().catch((err) =>{console.log("Offline persistence error:",err.code);});
 
 let currentUser = null;
 let appData = JSON.parsel(localStorage.getItem(STORAGE_KEY) || 'null');
@@ -553,7 +551,7 @@ function getDaysLeft(dateStr) {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=41');
+    navigator.serviceWorker.register('sw.js?v=42');
 
     renderFocusDashboard();
   }
@@ -636,8 +634,9 @@ function toggleNotifications(){
   function updateThemeButton(){
     const btn = document.getElementById('themeBtn');
     if(!btn)return;
+    
     if(document.body.classList.contains('dark-mode')){
-      bnt.innerHMTL = "☀️Light";
+      btn.innerHMTL = "☀️Light";
     }else{
       btn.innerHMTL = "🌙Dark";
     }
