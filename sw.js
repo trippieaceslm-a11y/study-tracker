@@ -17,7 +17,7 @@ event.respondWith(
     });
     return response;
   })
-  .cache(()=>{
+  .catch(()=>{
     return caches.match(event.request);
   })
 );
