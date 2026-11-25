@@ -3,8 +3,8 @@
   "short_name": "Study Tracker",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#008000",
-  "theme_color": "#ffa500",
+  "background_color": "#0a1730",
+  "theme_color": "#ff6f61",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
