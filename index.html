@@ -14,9 +14,9 @@
   :root { color-scheme: dark; }
   body {
     --bg:#25272C; --card:#17392B; --card2:#050505; --ink:#f2f5fb; --muted:#f5fffe; --line:rgb(250, 245, 245);
-    --coral:#C8FF3D; --coral-d:#F9311C; --forest:#228b22; --forest-l:#5fd08a; --navy-ink:#0a1730;
+    --coral:#F2B53A; --coral-d:#F9311C; --forest:#228b22; --forest-l:#5fd08a; --navy-ink:#0a1730;
   }
-  body.dark-mode { --bg:#333C31; --card:#064E3B; --card2:#050505; }
+  body.dark-mode { --bg:#226b96; --card:#0B1325; --card2:#050505; }
 
   * { box-sizing: border-box; font-family: system-ui, sans-serif; scroll-behavior: smooth; }
   body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: var(--bg); color: var(--ink); }
@@ -72,7 +72,7 @@
   /* Today's Focus */
   .focus-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--card2); border-radius: 6px; border-left: 4px solid var(--forest); }
   .focus-title { font-weight: bolder; font-size: 0.95rem; }
-  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: rgb(243, 247, 243); color: var(--forest-l); }
+  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: rgb(243, 247, 243); color: #F2F5FB; }
   .focus-urgent { background: rgba(255,111,97,0.2); color: var(--coral); }
 
   #semesterModal > div { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line); }
@@ -128,7 +128,7 @@
     </div>
     <div class="btn-group">
       <button class="btn-outline" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
-      <button class="btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="btn-outline" onclick="exportCSV()">♻️ Export CSV</button>
       <button class="btn-outline" onclick="resetToDefaults()">↻ Reset Sem</button>
       <button class="btn-outline" onclick="toggleDarkMode()" id="themeBtn">🌙Dark</button>
     </div>
