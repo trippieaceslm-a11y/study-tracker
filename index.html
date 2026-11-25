@@ -31,7 +31,7 @@
 
   input, select, button { padding: 0.6rem; font-size: 1rem; border-radius: 6px; border: 1px solid var(--line); }
   input, select { background: var(--card2); color: var(--ink); }
-  input::placeholder { color: var(--muted); }
+  input::placeholder { color: var(--muted); opacity: 0.6; }
   button { background: var(--forest); color: #fff; border-color: var(--forest); cursor: pointer; font-weight: bolder; }
   button:hover { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
   button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
@@ -44,8 +44,19 @@
   .delete-btn { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
   .delete-btn:hover { background: var(--coral-d); border-color: var(--coral-d); color: #fff; }
 
-  .table-wrap { overflow-x: auto; width: 100%; margin-top: 1rem; }
-  table { width: 100%; border-collapse: collapse; min-width: 800px; }
+  .table-wrap {
+    overflow-x: auto;
+    width: 100%;
+    margin-top: 1rem;
+    padding-bottom: 6px;
+    transform: rotateX(180deg);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1020px;
+    transform: rotateX(180deg);
+  }
   th, td { text-align: left; padding: 0.8rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: 0.95rem; }
   th { background: var(--card2); font-size: 0.85rem; text-transform: uppercase; color: var(--coral); }
   .actions-cell { white-space: nowrap; }
@@ -57,27 +68,27 @@
   .stat.study-stat strong { color: var(--forest-l); }
 
   .form-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .form-row input, .form-row select { flex: 1; min-width: 120px; }
-  .units-input { width: 80px; }
+  .fld { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+  .fld input, .fld select { width: 100%; flex: none; min-width: 0; }
   .course-code { color: var(--muted); font-size: 0.85rem; }
 
   .unit-subtext { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 4px; font-style: italic; }
   .progress-container { width: 100%; background: rgba(255,255,255,0.14); border-radius: 4px; height: 8px; margin-top: 4px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
-  .exam-red { color: var(--coral); font-weight: bolder; }
+  .exam-red { color: #ff6f61; font-weight: bolder; }
   .exam-orange { color: #ffb347; font-weight: bolder; }
   .exam-normal { color: var(--forest-l); font-weight: bolder; }
   .exam-passed { color: var(--muted); }
 
   /* Today's Focus */
-  .focus-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--card2); border-radius: 6px; border-left: 4px solid var(--forest); }
+  .focus-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; background: var(--card2); border-radius: 6px; border-left: 4px solid var(--forest); }
   .focus-title { font-weight: bolder; font-size: 0.95rem; }
-  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: rgb(243, 247, 243); color: #F2F5FB; }
-  .focus-urgent { background: rgba(255,111,97,0.2); color: var(--coral); }
+  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: rgba(95,208,138,0.2); color: var(--forest-l); }
+  .focus-urgent { background: rgba(255,111,97,0.2); color: #ff6f61; }
 
   #semesterModal > div { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line); }
 
-  /* Collapsible Header Styles */
+  /* Collapsible headers */
   .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding-bottom: 10px; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
   .collapsible-header:hover { border-bottom-color: var(--line); }
   .collapsible-header h3 { margin: 0; }
@@ -95,13 +106,10 @@
     .btn-group { width: 100%; display: flex; gap: 5px; flex-wrap: wrap; }
     .btn-group button { flex: 1; padding: 8px; font-size: 0.85rem; }
     .form-row { flex-direction: column; gap: 8px; }
-    .form-row input, .form-row select { width: 100% !important; flex: none !important; padding: 10px; font-size: 0.95rem; }
-    .form-row button { padding: 10px; font-size: 1rem; width: 100%; }
-    .table-wrap { overflow-x: auto; }
-    table { min-width: 600px; }
-    th, td { padding: 8px 4px; font-size: 0.8rem; }
-    .actions-cell { display: flex; flex-direction: column; gap: 4px; }
-    .small-btn { padding: 5px; font-size: 0.7rem; margin-right: 0; width: 100%; text-align: center; }
+    .fld { width: 100% !important; flex: none !important; }
+    .fld input, .fld select { padding: 10px; font-size: 0.95rem; }
+    .form-row button { align-self: stretch !important; padding: 10px; font-size: 1rem; width: 100%; }
+
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
     .stat { padding: 10px 5px; min-width: 0; border-radius: 6px; }
     .stat strong { font-size: 1.2rem; }
@@ -128,33 +136,36 @@
     </div>
     <div class="btn-group">
       <button class="btn-outline" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
-      <button class="btn-outline" onclick="exportCSV()">♻️ Export CSV</button>
+      <button class="btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
       <button class="btn-outline" onclick="resetToDefaults()">↻ Reset Sem</button>
       <button class="btn-outline" onclick="toggleDarkMode()" id="themeBtn">🌙Dark</button>
     </div>
   </div>
 
-  <!-- Collapsible Add Course Section -->
+  <!-- Collapsible: Add course -->
   <div class="card" id="addRecordSection">
     <div class="collapsible-header" onclick="toggleSection('addRecordContent', 'addRecordIcon')">
       <h3>➕ Add a Course / Study Record</h3>
-      <span class="collapsible-icon" id="addRecordIcon">⛓️▼</span>
+      <span class="collapsible-icon" id="addRecordIcon">▼</span>
     </div>
-    <div id="addRecordContent" style="display: none; margin-top: 15px;">
+    <div id="addRecordContent" style="display:none;margin-top:15px;">
       <div class="form-row">
-        <input id="code" placeholder="Code (e.g. AMA4312)" style="flex:none;width:140px;text-transform:uppercase;" />
-        <input id="name" placeholder="Course Name (e.g. Linear Algebra)" />
-        <input id="unitNames" placeholder="Unit Names (Optional)" />
-        <input id="units" type="number" placeholder="Units" min="0" step="0.5" class="units-input" style="width:70px;flex:none;" />
-        <input id="examDate" type="datetime-local" title="Final Exam Date" style="flex:none;" />
-        <input id="assignmentDate" type="datetime-local" title="Assignments/CAT Due Date" style="flex:none;"/>
-        <input id="studyGoal" type="number" placeholder="Goal Hrs" min="1" style="width:80px;flex:none;" title="Target Study Hours" />
-        <select id="status" style="flex:none;width:120px;">
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-          <option value="Planned">Planned</option>
-        </select>
-        <button onclick="addRecord()">Add</button>
+        <label class="fld" style="flex:none;width:130px;"><span>Code</span><input id="code" placeholder="AMA4312" style="text-transform:uppercase;" /></label>
+        <label class="fld" style="flex:2;min-width:180px;"><span>Course name</span><input id="name" placeholder="Linear Algebra" /></label>
+        <label class="fld"><span>Unit names (optional)</span><input id="unitNames" placeholder="e.g. Vectors, Matrices" /></label>
+        <label class="fld" style="flex:none;width:80px;"><span>Units</span><input id="units" type="number" placeholder="3" min="0" step="0.5" /></label>
+        <label class="fld" style="min-width:160px;"><span>Class (day &amp; time)</span><input id="classTime" placeholder="e.g. Mon 8-10am · LH2" /></label>
+        <label class="fld" style="flex:none;"><span>Upcoming CAT</span><input id="catDate" type="datetime-local" /></label>
+        <label class="fld" style="flex:none;"><span>Exam date &amp; time</span><input id="examDate" type="datetime-local" /></label>
+        <label class="fld" style="flex:none;width:90px;"><span>Goal hrs</span><input id="studyGoal" type="number" placeholder="10" min="1" /></label>
+        <label class="fld" style="flex:none;width:130px;"><span>Status</span>
+          <select id="status">
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Planned">Planned</option>
+          </select>
+        </label>
+        <button onclick="addRecord()" style="align-self:flex-end;">Add</button>
       </div>
     </div>
   </div>
@@ -164,17 +175,27 @@
     <div id="focusContent" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 
-  <!-- Collapsible My Records Section -->
+  <!-- Collapsible: My records -->
   <div class="card" id="recordsSection">
     <div class="collapsible-header" onclick="toggleSection('recordsContent', 'recordsIcon')">
       <h3>📚 My Records</h3>
-      <span class="collapsible-icon" id="recordsIcon">⛓️▼</span>
+      <span class="collapsible-icon" id="recordsIcon">▼</span>
     </div>
-    <div id="recordsContent" style="display: none; margin-top: 15px;">
+    <div id="recordsContent" style="display:none;margin-top:15px;">
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Code</th><th>Course / Units</th><th>Units</th><th>Status</th><th>Exam Date</th><th>Task Due</th><th>Study Progress</th><th>Actions</th></tr>
+            <tr>
+              <th>Code</th>
+              <th>Course / Units</th>
+              <th>Units</th>
+              <th>Status</th>
+              <th>Class</th>
+              <th>CAT</th>
+              <th>Exam Date</th>
+              <th>Study Progress</th>
+              <th>Actions</th>
+            </tr>
           </thead>
           <tbody id="recordsBody"></tbody>
         </table>
@@ -201,17 +222,18 @@
   </div>
 
 <script>
-  // --- UI Toggle Logic ---
+  // --- UI toggle ---
   function toggleSection(contentId, iconId) {
     const content = document.getElementById(contentId);
     const icon = document.getElementById(iconId);
-    if (content.style.display === 'none') {
-      content.style.display = 'block';
-      if (icon) icon.style.transform = 'rotate(180deg)';
-    } else {
-      content.style.display = 'none';
-      if (icon) icon.style.transform = 'rotate(0deg)';
-    }
+    const open = content.style.display === 'none';
+    content.style.display = open ? 'block' : 'none';
+    if (icon) icon.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+  }
+
+  // Escape user text before putting it into HTML
+  function esc(t) {
+    return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
   const DEFAULT_COURSES = [
@@ -229,7 +251,7 @@
 
   function makeCourses() {
     return DEFAULT_COURSES.map((c, i) => ({
-      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', examDate: ''
+      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', classTime: '', catDate: '', examDate: ''
     }));
   }
   function defaultData() {
@@ -278,7 +300,7 @@
   function renderSemesterDropdown() {
     const select = document.getElementById('semesterSelect');
     select.innerHTML = Object.keys(appData.semesters).map(sem =>
-      `<option value="${sem}" ${sem === appData.activeSemester ? 'selected' : ''}>${sem}</option>`
+      `<option value="${esc(sem)}" ${sem === appData.activeSemester ? 'selected' : ''}>${esc(sem)}</option>`
     ).join('');
   }
   function switchSemester(sem) { appData.activeSemester = sem; save(); render(); }
@@ -312,38 +334,35 @@
     save(); renderSemesterDropdown(); render();
   }
 
-  // --- Exam countdown ---
-  function formatDeadline(dateStr) {
-  if (!dateStr) return '<span class="exam-passed">—</span>';
-  
-  // Check if the deadline has passed
-  const deadline = new Date(dateStr);
-  const now = new Date();
-  
-  if (deadline < now) return '<span class="exam-passed">Passed</span>';
+  // --- Deadline display (includes Day of Week + Date + Time) ---
+  function formatDeadline(dateStr, includeWeekday = false) {
+    if (!dateStr) return '<span class="exam-passed">—</span>';
+    const deadline = new Date(dateStr);
+    const now = new Date();
+    if (deadline < now) return '<span class="exam-passed">Passed</span>';
 
-  // Format the date and time
-  const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  const formatted = deadline.toLocaleString('en-US', options);
+    const opts = includeWeekday
+      ? { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+      : { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const formatted = deadline.toLocaleString('en-US', opts);
+    const diffDays = (deadline - now) / (1000 * 60 * 60 * 24);
 
-  // Color coding based on how close it is
-  const diffMs = deadline - now;
-  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    let colorClass = 'exam-normal';
+    if (diffDays <= 1) colorClass = 'exam-red';
+    else if (diffDays <= 3) colorClass = 'exam-orange';
 
-  let colorClass = 'exam-normal';
-  if (diffDays <= 1) colorClass = 'exam-red';
-  else if (diffDays <= 3) colorClass = 'exam-orange';
-
-  return `<span class="${colorClass}" style="font-weight:bold; font-size:0.85rem;">${formatted}</span>`;
-}
+    return `<span class="${colorClass}" style="font-weight:bold;font-size:0.85rem;white-space:nowrap;">${formatted}</span>`;
+  }
 
   // --- CSV export ---
   function exportCSV() {
     const records = getRecords();
     if (records.length === 0) { alert('No records to export.'); return; }
-    let csv = 'Code,Course Name,Unit Names,Units,Status,Exam Date,Study Hours\n';
+    const q = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+    let csv = 'Code,Course Name,Unit Names,Units,Status,Class,CAT Date,Exam Date,Study Hours,Goal Hours\n';
     records.forEach(r => {
-      csv += `"${r.code || ''}","${r.name}","${r.unitNames || ''}",${r.units},"${r.status}","${r.examDate || ''}",${r.studyHours || 0}\n`;
+      const catVal = r.catDate || r.assignmentDate || '';
+      csv += [q(r.code), q(r.name), q(r.unitNames), r.units, q(r.status), q(r.classTime), q(catVal), q(r.examDate), r.studyHours || 0, r.studyGoal || 10].join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -370,30 +389,38 @@
     const name = document.getElementById('name').value.trim();
     const unitNames = document.getElementById('unitNames').value.trim();
     const units = parseFloat(document.getElementById('units').value);
+    const classTime = document.getElementById('classTime').value.trim();
+    const catDate = document.getElementById('catDate').value;
     const examDate = document.getElementById('examDate').value;
-    const assignmentDate = document.getElementById('assignmentDate').value;
     const studyGoal = parseFloat(document.getElementById('studyGoal').value) || 10;
     const status = document.getElementById('status').value;
 
     if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
 
-    getRecords().push({ id: Date.now(), code, name, unitNames, units, examDate,assignmentDate, status, studyHours: 0, studyGoal});
+    getRecords().push({ id: Date.now(), code, name, unitNames, units, classTime, catDate, examDate, status, studyHours: 0, studyGoal });
     save(); render();
 
-    ['code', 'name', 'unitNames', 'units', 'examDate','assignmentDate', 'studyGoal'].forEach(f => document.getElementById(f).value ='');
+    ['code', 'name', 'unitNames', 'units', 'classTime', 'catDate', 'examDate', 'studyGoal'].forEach(f => document.getElementById(f).value = '');
   }
 
+  // Clear resets hours, status and dates. Name, units, and class stay.
   function clearRecordData(id) {
-    if (!confirm('Clear all data for this course? The name will remain.')) return;
+    if (!confirm('Clear study hours, status, CAT and exam dates for this course? Name, units, and class stay.')) return;
     const rec = getRecords().find(r => r.id === id);
     if (!rec) return;
     rec.studyHours = 0;
-    recstatus = 'Planned';
-    rec.examDate = '';
+    rec.status = 'Planned';
+    rec.catDate = '';
     rec.assignmentDate = '';
-    rec.units = 0;
+    rec.examDate = '';
+    save(); render();
+  }
 
-    save();render();
+  function markCompleted(id) {
+    const rec = getRecords().find(r => r.id === id);
+    if (!rec) return;
+    rec.status = 'Completed';
+    save(); render();
   }
 
   function deleteRecord(id) {
@@ -403,48 +430,52 @@
   }
 
   function startEdit(id) {
-  const rec = getRecords().find(r => r.id === id);
-  const row = document.getElementById('row-' + id);
-  if (!rec || !row) return;
-  row.innerHTML = `
-    <td><input id="edit-code-${id}" value="${rec.code || ''}" style="width:80px;text-transform:uppercase;"></td>
-    <td>
-      <input id="edit-name-${id}" value="${rec.name}" style="width:100%;margin-bottom:4px;">
-      <input id="edit-unitnames-${id}" value="${rec.unitNames || ''}" placeholder="Unit names..." style="width:100%;font-size:0.8rem;">
-    </td>
-    <td><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}" class="units-input" style="width:60px;"></td>
-    <td>
-      <select id="edit-status-${id}" style="width:100px;">
-        <option ${rec.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-        <option ${rec.status === 'Completed' ? 'selected' : ''}>Completed</option>
-        <option ${rec.status === 'Planned' ? 'selected' : ''}>Planned</option>
-      </select>
-    </td>
-    <td><input id="edit-examdate-${id}" type="datetime-local" value="${rec.examDate || ''}" style="width:120px;"></td>
-    <td><input id="edit-assignmentdate-${id}" type="datetime-local" value="${rec.assignmentDate || ''}" style="width:120px;"></td>
-    <td><div>${rec.studyHours || 0}/<input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}" style="width:50px;padding:2px;"></div></td>
-    <td class="actions-cell">
-      <button class="small-btn save-btn" onclick="saveEdit(${id})">Save</button>
-      <button class="small-btn" onclick="render()">Cancel</button>
-    </td>
-  `;
-}
+    const rec = getRecords().find(r => r.id === id);
+    const row = document.getElementById('row-' + id);
+    if (!rec || !row) return;
+    const currentCat = rec.catDate || rec.assignmentDate || '';
+    row.innerHTML = `
+      <td><input id="edit-code-${id}" value="${esc(rec.code)}" style="width:90px;text-transform:uppercase;"></td>
+      <td>
+        <input id="edit-name-${id}" value="${esc(rec.name)}" style="width:100%;margin-bottom:4px;">
+        <input id="edit-unitnames-${id}" value="${esc(rec.unitNames)}" placeholder="Unit names..." style="width:100%;font-size:0.8rem;">
+      </td>
+      <td><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}" style="width:70px;"></td>
+      <td>
+        <select id="edit-status-${id}" style="width:110px;">
+          <option ${rec.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+          <option ${rec.status === 'Completed' ? 'selected' : ''}>Completed</option>
+          <option ${rec.status === 'Planned' ? 'selected' : ''}>Planned</option>
+        </select>
+      </td>
+      <td><input id="edit-classtime-${id}" value="${esc(rec.classTime)}" placeholder="Mon 8-10am · LH2" style="width:155px;"></td>
+      <td><input id="edit-catdate-${id}" type="datetime-local" value="${currentCat}" style="width:190px;"></td>
+      <td><input id="edit-examdate-${id}" type="datetime-local" value="${rec.examDate || ''}" style="width:190px;"></td>
+      <td><div>${rec.studyHours || 0}/<input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}" style="width:60px;padding:2px;"></div></td>
+      <td class="actions-cell">
+        <button class="small-btn save-btn" onclick="saveEdit(${id})">Save</button>
+        <button class="small-btn" onclick="render()">Cancel</button>
+      </td>
+    `;
+  }
 
-function saveEdit(id) {
-  const rec = getRecords().find(r => r.id === id);
-  if (!rec) return;
-  rec.code = document.getElementById(`edit-code-${id}`).value.trim().toUpperCase();
-  rec.name = document.getElementById(`edit-name-${id}`).value.trim() || rec.name;
-  rec.unitNames = document.getElementById(`edit-unitnames-${id}`).value.trim();
-  const u = parseFloat(document.getElementById(`edit-units-${id}`).value);
-  if (!isNaN(u) && u >= 0) rec.units = u;
-  rec.status = document.getElementById(`edit-status-${id}`).value;
-  rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
-  rec.assignmentDate = document.getElementById(`edit-assignmentdate-${id}`).value; // NEW
-  const goal = parseFloat(document.getElementById(`edit-goal-${id}`).value);
-  if (!isNaN(goal) && goal > 0) rec.studyGoal = goal;
-  save(); render();
-}
+  function saveEdit(id) {
+    const rec = getRecords().find(r => r.id === id);
+    if (!rec) return;
+    rec.code = document.getElementById(`edit-code-${id}`).value.trim().toUpperCase();
+    rec.name = document.getElementById(`edit-name-${id}`).value.trim() || rec.name;
+    rec.unitNames = document.getElementById(`edit-unitnames-${id}`).value.trim();
+    const u = parseFloat(document.getElementById(`edit-units-${id}`).value);
+    if (!isNaN(u) && u >= 0) rec.units = u;
+    rec.status = document.getElementById(`edit-status-${id}`).value;
+    rec.classTime = document.getElementById(`edit-classtime-${id}`).value.trim();
+    rec.catDate = document.getElementById(`edit-catdate-${id}`).value;
+    rec.assignmentDate = rec.catDate;
+    rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
+    const goal = parseFloat(document.getElementById(`edit-goal-${id}`).value);
+    if (!isNaN(goal) && goal > 0) rec.studyGoal = goal;
+    save(); render();
+  }
 
   function resetToDefaults() {
     if (!confirm('Reset to default courses? Study hours will be lost.')) return;
@@ -454,74 +485,57 @@ function saveEdit(id) {
 
   // --- Today's Focus ---
   function daysUntil(dateStr) {
-    if(!dateStr)return 999;
-    const today = new Date();today.setHours(0,0,0,0);
-    const target = new Date(dateStr);target.setHours(0,0,0,0);
-    return Math.round((target-today)/(1000*60*60*24));
+    if (!dateStr) return 999;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const target = new Date(dateStr); target.setHours(0, 0, 0, 0);
+    return Math.round((target - today) / (1000 * 60 * 60 * 24));
   }
 
   function renderFocusDashboard() {
-  const container = document.getElementById('focusContent');
-  
-  // 1. Filter courses that are In Progress OR have an exam/task within 7 days
-  const focusCourses = getRecords().filter(r => {
-    if (r.status === 'In Progress') return true;
-    if (r.examDate) { const d = daysUntil(r.examDate); if (d >= 0 && d <= 7) return true; }
-    if (r.assignmentDate) { const d = daysUntil(r.assignmentDate); if (d >= 0 && d <= 7) return true; }
-    return false;
-  });
+    const container = document.getElementById('focusContent');
 
-  // 2. Sort by whichever is closer (Exam or Task)
-  focusCourses.sort((a, b) => {
-    const getMinDays = (course) => {
+    const focusCourses = getRecords().filter(r => {
+      const cat = r.catDate || r.assignmentDate;
+      if (r.status === 'In Progress') return true;
+      if (r.examDate) { const d = daysUntil(r.examDate); if (d >= 0 && d <= 7) return true; }
+      if (cat) { const d = daysUntil(cat); if (d >= 0 && d <= 7) return true; }
+      return false;
+    });
+
+    const getMinDays = course => {
       let min = 999;
-      if (course.examDate) { let d = daysUntil(course.examDate); if (d >= 0) min = Math.min(min, d); }
-      if (course.assignmentDate) { let d = daysUntil(course.assignmentDate); if (d >= 0) min = Math.min(min, d); }
+      const cat = course.catDate || course.assignmentDate;
+      if (course.examDate) { const d = daysUntil(course.examDate); if (d >= 0) min = Math.min(min, d); }
+      if (cat) { const d = daysUntil(cat); if (d >= 0) min = Math.min(min, d); }
       return min;
     };
-    return getMinDays(a) - getMinDays(b);
-  });
+    focusCourses.sort((a, b) => getMinDays(a) - getMinDays(b));
 
-  if (focusCourses.length === 0) {
-    container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming deadlines this week. 🎉</p>`;
-    return;
+    if (focusCourses.length === 0) {
+      container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming CATs/exams this week. 🎉</p>`;
+      return;
+    }
+
+    container.innerHTML = focusCourses.map(r => {
+      const badges = [];
+      const cat = r.catDate || r.assignmentDate;
+      if (r.examDate) {
+        const d = daysUntil(r.examDate);
+        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason focus-urgent">🚨 ${d === 0 ? 'Exam TODAY!' : 'Exam in ' + d + 'd'}</span>`);
+      }
+      if (cat) {
+        const d = daysUntil(cat);
+        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 ${d === 0 ? 'CAT TODAY!' : 'CAT in ' + d + 'd'}</span>`);
+      }
+      if (badges.length === 0) badges.push(`<span class="focus-reason">In Progress</span>`);
+
+      return `
+        <div class="focus-item">
+          <div class="focus-title">${r.code ? esc(r.code) + ' - ' : ''}${esc(r.name)}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;">${badges.join('')}</div>
+        </div>`;
+    }).join('');
   }
-
-  // 3. Render the badges
-  container.innerHTML = focusCourses.map(r => {
-    let badges = [];
-
-    // Check Exam
-    if (r.examDate) {
-      const d = daysUntil(r.examDate);
-      if (d >= 0 && d <= 7) {
-        if (d === 0) badges.push(`<span class="focus-reason focus-urgent">🚨 Exam TODAY!</span>`);
-        else badges.push(`<span class="focus-reason focus-urgent">🚨 Exam in ${d}d</span>`);
-      }
-    }
-
-    // Check Assignment/CAT
-    if (r.assignmentDate) {
-      const d = daysUntil(r.assignmentDate);
-      if (d >= 0 && d <= 7) {
-        // Using a custom orange color for tasks
-        if (d === 0) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 Task TODAY!</span>`);
-        else badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 Task in ${d}d</span>`);
-      }
-    }
-
-    // If it's just "In Progress" but has no upcoming deadlines
-    if (badges.length === 0) {
-      badges.push(`<span class="focus-reason">In Progress</span>`);
-    }
-
-    return `
-      <div class="focus-item">
-        <div class="focus-title">${r.code ? r.code + ' - ' : ''}${r.name}</div>
-        <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end;">${badges.join('')}</div>
-      </div>`;
-  }).join('');
-}
 
   // --- Main render ---
   function render() {
@@ -529,20 +543,25 @@ function saveEdit(id) {
     const body = document.getElementById('recordsBody');
 
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">No courses. Add one above or reset.</td></tr>`;
+      body.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:2rem;">No courses yet. Add one above or tap Reset Sem.</td></tr>`;
     } else {
       body.innerHTML = records.map(r => {
         const hrs = r.studyHours || 0, goal = r.studyGoal || 10;
         const pct = Math.min((hrs / goal) * 100, 100);
         const color = hrs >= goal ? '#2fb24c' : '#ff6f61';
+        const overdue = r.examDate && r.status !== 'Completed' && new Date(r.examDate) < new Date();
+        const mark = overdue
+          ? `<button class="small-btn" style="display:block;margin-top:6px;" onclick="markCompleted(${r.id})">✔ Mark completed</button>` : '';
+        const catVal = r.catDate || r.assignmentDate || '';
         return `
         <tr id="row-${r.id}">
-          <td class="course-code">${r.code || '—'}</td>
-          <td>${r.name}${r.unitNames ? `<span class="unit-subtext">${r.unitNames}</span>` : ''}</td>
+          <td class="course-code">${esc(r.code) || '—'}</td>
+          <td>${esc(r.name)}${r.unitNames ? `<span class="unit-subtext">${esc(r.unitNames)}</span>` : ''}</td>
           <td>${r.units}</td>
-          <td>${r.status}</td>
-          <td>${formatDeadline(r.examDate)}</td>
-          <td>${formatDeadline(r.assignmentDate)}</td>
+          <td><div>${esc(r.status)}${mark}</div></td>
+          <td style="font-size:0.85rem;white-space:nowrap;">${r.classTime ? esc(r.classTime) : '<span class="exam-passed">—</span>'}</td>
+          <td>${formatDeadline(catVal, true)}</td>
+          <td>${formatDeadline(r.examDate, false)}</td>
           <td>
             <div style="font-size:0.85rem;margin-bottom:2px;"><strong>${hrs}</strong>/${goal}hrs</div>
             <div class="progress-container"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div>
@@ -557,16 +576,13 @@ function saveEdit(id) {
       }).join('');
     }
 
-    const sum = arr => arr.reduce((s, r) => s + r.units, 0);
+    const sum = arr => arr.reduce((s, r) => s + (Number(r.units) || 0), 0);
     const sumHours = arr => arr.reduce((s, r) => s + (r.studyHours || 0), 0);
-    const totalUnitsVal = sum(records);
-    const inProgressVal = sum(records.filter(r => r.status === 'In Progress'));
-    const studyHrsVal = sumHours(records);
 
-    document.getElementById('totalUnits').textContent      = totalUnitsVal;
+    document.getElementById('totalUnits').textContent      = sum(records);
     document.getElementById('completedUnits').textContent  = sum(records.filter(r => r.status === 'Completed'));
-    document.getElementById('inProgressUnits').textContent = inProgressVal;
-    document.getElementById('totalStudyHours').textContent = studyHrsVal;
+    document.getElementById('inProgressUnits').textContent = sum(records.filter(r => r.status === 'In Progress'));
+    document.getElementById('totalStudyHours').textContent = sumHours(records);
 
     renderFocusDashboard();
   }
@@ -603,36 +619,42 @@ function saveEdit(id) {
     }
   }
 
+  function sendNativeNotification(title, body) {
+    const opts = { body, icon: 'android-chrome-192x192.png', vibrate: [200, 100, 200] };
+    const fallback = () => { try { new Notification(title, opts); } catch (e) {} };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration()
+        .then(reg => reg ? reg.showNotification(title, opts) : fallback())
+        .catch(fallback);
+    } else {
+      fallback();
+    }
+  }
+
   function checkUpcomingExams() {
     if (!hasNotif || Notification.permission !== 'granted') return;
     if (localStorage.getItem('alertsOff') === 'true') return;
 
     const todayString = new Date().toDateString();
-    // Helper to send the native notification//
-    function sendNativeNotification(title,body){
-      if('serviceWorker' in navigator){
-        navigator.serviceWorker.ready.then(registration =>{
-          registration.show.Notification(title,{
-            body:body,
-            icon:'android-chrome-192x192.png',
-            vibrate:[200,100,200]
-          });
-        });
-      }else{
-        new Notification(title,{body:body,icon:'android-chrome-192x192.png'});
-      }
-    }
+    const notifyOnce = (key, title, body) => {
+      if (localStorage.getItem(key) === todayString) return;
+      sendNativeNotification(title, body);
+      localStorage.setItem(key, todayString);
+    };
 
-    getRecords().forEach(r =>{
-      //check Exams//
-      if(r.examDate){
+    getRecords().forEach(r => {
+      const label = r.name || 'Course';
+      const cat = r.catDate || r.assignmentDate;
+      if (r.examDate) {
         const d = daysUntil(r.examDate);
-        if(d >= 0 && d <= 1){
-          const key = `notified_exam_${r.id}`;
-          if(localStorage.getItem(key) !== todayString){
-            sendNativeNotification('📒TASK DUE',`${r.name ||'Course'}assignment/CAT is due ${d == 0?'TODAY':'TOMORROW'}!`);
-            localStorage.setItem(key,todayString);
-          }
+        if (d >= 0 && d <= 1) {
+          notifyOnce(`notified_exam_${r.id}`, '🚨 EXAM ALERT', `${label} exam is ${d === 0 ? 'TODAY' : 'TOMORROW'}! Time to study!`);
+        }
+      }
+      if (cat) {
+        const d = daysUntil(cat);
+        if (d >= 0 && d <= 1) {
+          notifyOnce(`notified_cat_${r.id}`, '📝 CAT ALERT', `${label} CAT is ${d === 0 ? 'TODAY' : 'TOMORROW'}!`);
         }
       }
     });
