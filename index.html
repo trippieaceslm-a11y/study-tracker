@@ -11,14 +11,10 @@
 <link rel="icon" href="android-chrome-192x192.png">
 <link rel="manifest" href="manifest.json">
 <style>
-  /* =====================================================
-     COLORS  (edit the values here for the page itself)
-     Buttons are NOT in this list: each button class
-     further down has its own colors.
-     ===================================================== */
+
   body {
-    --page:#D9F2C4;      /* page background (light green) */
-    --card:#FFFFFF;      /* cards (white) */
+    --page:#C6A547;      /* page background (light green) */
+    --card:#084432;      /* cards (white) */
     --cell:#F2FAEA;      /* small boxes inside cards */
     --text:#000000;      /* all writing */
     --label:#7A5C00;     /* small gold labels */
@@ -63,7 +59,7 @@
   .btn-logout  { background: #FFFFFF; color: #000000; border-color: #000000; }
   .btn-logout:hover  { background: #FFF2B8; }
 
-  .btn-newsem  { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-newsem  { background: #F1D9A8; color: #000000; border-color: #8A6A00; }
   .btn-newsem:hover  { background: #FFD54A; }
 
   .btn-delsem  { background: #FF4D4D; color: #000000; border-color: #A81212; }
@@ -71,7 +67,7 @@
 
   .btn-notify  { background: #FFFFFF; color: #000000; border-color: #000000; }   /* base look */
   .btn-notify:hover  { background: #FFF2B8; }
-  .btn-notify.btn-on  { background: #2ECC71; border-color: #17803F; }            /* alerts ON  = green */
+  .btn-notify.btn-on  { background: #C8FF3D; border-color: #17803F; }            /* alerts ON  = green */
   .btn-notify.btn-off { background: #FF4D4D; border-color: #A81212; }            /* alerts OFF = red   */
 
   .btn-export  { background: #FFFFFF; color: #000000; border-color: #000000; }
@@ -95,7 +91,7 @@
   .btn-log     { background: #F5B800; color: #000000; border-color: #8A6A00; }
   .btn-log:hover     { background: #FFD54A; }
 
-  .btn-edit    { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-edit    { background: #105BFF; color: #000000; border-color: #000000; }
   .btn-edit:hover    { background: #FFF2B8; }
 
   .btn-clear   { background: #CDEFB2; color: #000000; border-color: #4C8C2B; }
@@ -104,7 +100,7 @@
   .btn-delete  { background: #FF4D4D; color: #000000; border-color: #A81212; }
   .btn-delete:hover  { background: #FF7A7A; }
 
-  .btn-save    { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-save    { background: #CFFF74; color: #000000; border-color: #8A6A00; }
   .btn-save:hover    { background: #FFD54A; }
 
   .btn-pass    { background: #2ECC71; color: #000000; border-color: #17803F; }   /* "Mark completed" */
@@ -748,7 +744,7 @@
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=62').catch(() => {});
+    navigator.serviceWorker.register('sw.js?v=63').catch(() => {});
   }
 
   // --- Notifications ---
