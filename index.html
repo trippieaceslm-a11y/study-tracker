@@ -44,22 +44,21 @@
   .delete-btn { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
   .delete-btn:hover { background: var(--coral-d); border-color: var(--coral-d); color: #fff; }
 
-  .table-wrap {
-    overflow-x: auto;
-    width: 100%;
-    margin-top: 1rem;
-    padding-bottom: 6px;
-    transform: rotateX(180deg);
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 1020px;
-    transform: rotateX(180deg);
-  }
-  th, td { text-align: left; padding: 0.8rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: 0.95rem; }
-  th { background: var(--card2); font-size: 0.85rem; text-transform: uppercase; color: var(--coral); }
-  .actions-cell { white-space: nowrap; }
+  .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-top: 1rem; }
+  .course-card { background: var(--card2); border: 1px solid var(--line); border-top: 3px solid var(--coral); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .course-card.done { border-top-color: var(--forest); }
+  .cc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .cc-code { font-weight: 800; color: var(--coral); font-size: 0.85rem; letter-spacing: 0.05em; }
+  .cc-units { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: rgba(255,255,255,0.12); }
+  .cc-name { font-weight: 700; font-size: 1.02rem; line-height: 1.25; }
+  .cc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cc-cell { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; min-width: 0; }
+  .cc-cell small { display: block; color: var(--coral); font-size: 0.65rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 3px; }
+  .cc-cell input, .cc-cell select { width: 100%; padding: 6px; font-size: 0.85rem; }
+  .cc-wide { grid-column: 1 / -1; }
+  .cc-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+  .cc-actions .small-btn { flex: 1; min-height: 40px; min-width: 64px; margin-right: 0; font-size: 0.85rem; text-align: center; }
+  .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
 
   .stats { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
   .stat { flex: 1; min-width: 110px; background: var(--card2); padding: 1rem; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--coral); }
@@ -72,7 +71,7 @@
   .fld input, .fld select { width: 100%; flex: none; min-width: 0; }
   .course-code { color: var(--muted); font-size: 0.85rem; }
 
-  .unit-subtext { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 4px; font-style: italic; }
+  .unit-subtext { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 4px; font-style: italic; max-height: 7.5em; overflow-y: auto; }
   .progress-container { width: 100%; background: rgba(255,255,255,0.14); border-radius: 4px; height: 8px; margin-top: 4px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
   .exam-red { color: #ff6f61; font-weight: bolder; }
@@ -109,6 +108,8 @@
     .fld { width: 100% !important; flex: none !important; }
     .fld input, .fld select { padding: 10px; font-size: 0.95rem; }
     .form-row button { align-self: stretch !important; padding: 10px; font-size: 1rem; width: 100%; }
+
+    .course-grid { grid-template-columns: 1fr; }
 
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
     .stat { padding: 10px 5px; min-width: 0; border-radius: 6px; }
@@ -154,9 +155,8 @@
         <label class="fld" style="flex:2;min-width:180px;"><span>Course name</span><input id="name" placeholder="Linear Algebra" /></label>
         <label class="fld"><span>Unit names (optional)</span><input id="unitNames" placeholder="e.g. Vectors, Matrices" /></label>
         <label class="fld" style="flex:none;width:80px;"><span>Units</span><input id="units" type="number" placeholder="3" min="0" step="0.5" /></label>
-        <label class="fld" style="min-width:160px;"><span>Class (day &amp; time)</span><input id="classTime" placeholder="e.g. Mon 8-10am · LH2" /></label>
-        <label class="fld" style="flex:none;"><span>Upcoming CAT</span><input id="catDate" type="datetime-local" /></label>
         <label class="fld" style="flex:none;"><span>Exam date &amp; time</span><input id="examDate" type="datetime-local" /></label>
+        <label class="fld" style="flex:none;"><span>Task / CAT due</span><input id="assignmentDate" type="datetime-local" /></label>
         <label class="fld" style="flex:none;width:90px;"><span>Goal hrs</span><input id="studyGoal" type="number" placeholder="10" min="1" /></label>
         <label class="fld" style="flex:none;width:130px;"><span>Status</span>
           <select id="status">
@@ -182,24 +182,7 @@
       <span class="collapsible-icon" id="recordsIcon">▼</span>
     </div>
     <div id="recordsContent" style="display:none;margin-top:15px;">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Course / Units</th>
-              <th>Units</th>
-              <th>Status</th>
-              <th>Class</th>
-              <th>CAT</th>
-              <th>Exam Date</th>
-              <th>Study Progress</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="recordsBody"></tbody>
-        </table>
-      </div>
+      <div id="recordsGrid" class="course-grid"></div>
       <div class="stats">
         <div class="stat">Total Units<strong id="totalUnits">0</strong></div>
         <div class="stat">Completed<strong id="completedUnits">0</strong></div>
@@ -251,7 +234,7 @@
 
   function makeCourses() {
     return DEFAULT_COURSES.map((c, i) => ({
-      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', classTime: '', catDate: '', examDate: ''
+      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', examDate: '', assignmentDate: ''
     }));
   }
   function defaultData() {
@@ -334,24 +317,21 @@
     save(); renderSemesterDropdown(); render();
   }
 
-  // --- Deadline display (includes Day of Week + Date + Time) ---
-  function formatDeadline(dateStr, includeWeekday = false) {
+  // --- Deadline display ---
+  function formatDeadline(dateStr) {
     if (!dateStr) return '<span class="exam-passed">—</span>';
     const deadline = new Date(dateStr);
     const now = new Date();
     if (deadline < now) return '<span class="exam-passed">Passed</span>';
 
-    const opts = includeWeekday
-      ? { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
-      : { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    const formatted = deadline.toLocaleString('en-US', opts);
+    const formatted = deadline.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     const diffDays = (deadline - now) / (1000 * 60 * 60 * 24);
 
     let colorClass = 'exam-normal';
     if (diffDays <= 1) colorClass = 'exam-red';
     else if (diffDays <= 3) colorClass = 'exam-orange';
 
-    return `<span class="${colorClass}" style="font-weight:bold;font-size:0.85rem;white-space:nowrap;">${formatted}</span>`;
+    return `<span class="${colorClass}" style="font-weight:bold;font-size:0.85rem;">${formatted}</span>`;
   }
 
   // --- CSV export ---
@@ -359,10 +339,9 @@
     const records = getRecords();
     if (records.length === 0) { alert('No records to export.'); return; }
     const q = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
-    let csv = 'Code,Course Name,Unit Names,Units,Status,Class,CAT Date,Exam Date,Study Hours,Goal Hours\n';
+    let csv = 'Code,Course Name,Unit Names,Units,Status,Exam Date,Task Due,Study Hours,Goal Hours\n';
     records.forEach(r => {
-      const catVal = r.catDate || r.assignmentDate || '';
-      csv += [q(r.code), q(r.name), q(r.unitNames), r.units, q(r.status), q(r.classTime), q(catVal), q(r.examDate), r.studyHours || 0, r.studyGoal || 10].join(',') + '\n';
+      csv += [q(r.code), q(r.name), q(r.unitNames), r.units, q(r.status), q(r.examDate), q(r.assignmentDate), r.studyHours || 0, r.studyGoal || 10].join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -389,30 +368,28 @@
     const name = document.getElementById('name').value.trim();
     const unitNames = document.getElementById('unitNames').value.trim();
     const units = parseFloat(document.getElementById('units').value);
-    const classTime = document.getElementById('classTime').value.trim();
-    const catDate = document.getElementById('catDate').value;
     const examDate = document.getElementById('examDate').value;
+    const assignmentDate = document.getElementById('assignmentDate').value;
     const studyGoal = parseFloat(document.getElementById('studyGoal').value) || 10;
     const status = document.getElementById('status').value;
 
     if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
 
-    getRecords().push({ id: Date.now(), code, name, unitNames, units, classTime, catDate, examDate, status, studyHours: 0, studyGoal });
+    getRecords().push({ id: Date.now(), code, name, unitNames, units, examDate, assignmentDate, status, studyHours: 0, studyGoal });
     save(); render();
 
-    ['code', 'name', 'unitNames', 'units', 'classTime', 'catDate', 'examDate', 'studyGoal'].forEach(f => document.getElementById(f).value = '');
+    ['code', 'name', 'unitNames', 'units', 'examDate', 'assignmentDate', 'studyGoal'].forEach(f => document.getElementById(f).value = '');
   }
 
-  // Clear resets hours, status and dates. Name, units, and class stay.
+  // Clear resets hours, status and dates. Name and units stay.
   function clearRecordData(id) {
-    if (!confirm('Clear study hours, status, CAT and exam dates for this course? Name, units, and class stay.')) return;
+    if (!confirm('Clear study hours, status and dates for this course? Name and units stay.')) return;
     const rec = getRecords().find(r => r.id === id);
     if (!rec) return;
     rec.studyHours = 0;
     rec.status = 'Planned';
-    rec.catDate = '';
-    rec.assignmentDate = '';
     rec.examDate = '';
+    rec.assignmentDate = '';
     save(); render();
   }
 
@@ -431,32 +408,28 @@
 
   function startEdit(id) {
     const rec = getRecords().find(r => r.id === id);
-    const row = document.getElementById('row-' + id);
-    if (!rec || !row) return;
-    const currentCat = rec.catDate || rec.assignmentDate || '';
-    row.innerHTML = `
-      <td><input id="edit-code-${id}" value="${esc(rec.code)}" style="width:90px;text-transform:uppercase;"></td>
-      <td>
-        <input id="edit-name-${id}" value="${esc(rec.name)}" style="width:100%;margin-bottom:4px;">
-        <input id="edit-unitnames-${id}" value="${esc(rec.unitNames)}" placeholder="Unit names..." style="width:100%;font-size:0.8rem;">
-      </td>
-      <td><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}" style="width:70px;"></td>
-      <td>
-        <select id="edit-status-${id}" style="width:110px;">
-          <option ${rec.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-          <option ${rec.status === 'Completed' ? 'selected' : ''}>Completed</option>
-          <option ${rec.status === 'Planned' ? 'selected' : ''}>Planned</option>
-        </select>
-      </td>
-      <td><input id="edit-classtime-${id}" value="${esc(rec.classTime)}" placeholder="Mon 8-10am · LH2" style="width:155px;"></td>
-      <td><input id="edit-catdate-${id}" type="datetime-local" value="${currentCat}" style="width:190px;"></td>
-      <td><input id="edit-examdate-${id}" type="datetime-local" value="${rec.examDate || ''}" style="width:190px;"></td>
-      <td><div>${rec.studyHours || 0}/<input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}" style="width:60px;padding:2px;"></div></td>
-      <td class="actions-cell">
-        <button class="small-btn save-btn" onclick="saveEdit(${id})">Save</button>
-        <button class="small-btn" onclick="render()">Cancel</button>
-      </td>
-    `;
+    const card = document.getElementById('row-' + id);
+    if (!rec || !card) return;
+    card.innerHTML = `
+      <div class="cc-grid">
+        <div class="cc-cell"><small>Code</small><input id="edit-code-${id}" value="${esc(rec.code)}" style="text-transform:uppercase;"></div>
+        <div class="cc-cell"><small>Units</small><input id="edit-units-${id}" type="number" min="0" step="0.5" value="${rec.units}"></div>
+        <div class="cc-cell cc-wide"><small>Course name</small><input id="edit-name-${id}" value="${esc(rec.name)}"></div>
+        <div class="cc-cell cc-wide"><small>Unit names / topics</small><input id="edit-unitnames-${id}" value="${esc(rec.unitNames)}"></div>
+        <div class="cc-cell"><small>Status</small>
+          <select id="edit-status-${id}">
+            <option ${rec.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+            <option ${rec.status === 'Completed' ? 'selected' : ''}>Completed</option>
+            <option ${rec.status === 'Planned' ? 'selected' : ''}>Planned</option>
+          </select></div>
+        <div class="cc-cell"><small>Goal hrs (done: ${rec.studyHours || 0})</small><input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}"></div>
+        <div class="cc-cell cc-wide"><small>Exam date &amp; time</small><input id="edit-examdate-${id}" type="datetime-local" value="${rec.examDate || ''}"></div>
+        <div class="cc-cell cc-wide"><small>Task / CAT due</small><input id="edit-assignmentdate-${id}" type="datetime-local" value="${rec.assignmentDate || ''}"></div>
+      </div>
+      <div class="cc-actions">
+        <button class="small-btn" onclick="saveEdit(${id})">Save</button>
+        <button class="small-btn btn-outline" onclick="render()">Cancel</button>
+      </div>`;
   }
 
   function saveEdit(id) {
@@ -468,10 +441,8 @@
     const u = parseFloat(document.getElementById(`edit-units-${id}`).value);
     if (!isNaN(u) && u >= 0) rec.units = u;
     rec.status = document.getElementById(`edit-status-${id}`).value;
-    rec.classTime = document.getElementById(`edit-classtime-${id}`).value.trim();
-    rec.catDate = document.getElementById(`edit-catdate-${id}`).value;
-    rec.assignmentDate = rec.catDate;
     rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
+    rec.assignmentDate = document.getElementById(`edit-assignmentdate-${id}`).value;
     const goal = parseFloat(document.getElementById(`edit-goal-${id}`).value);
     if (!isNaN(goal) && goal > 0) rec.studyGoal = goal;
     save(); render();
@@ -495,37 +466,34 @@
     const container = document.getElementById('focusContent');
 
     const focusCourses = getRecords().filter(r => {
-      const cat = r.catDate || r.assignmentDate;
       if (r.status === 'In Progress') return true;
       if (r.examDate) { const d = daysUntil(r.examDate); if (d >= 0 && d <= 7) return true; }
-      if (cat) { const d = daysUntil(cat); if (d >= 0 && d <= 7) return true; }
+      if (r.assignmentDate) { const d = daysUntil(r.assignmentDate); if (d >= 0 && d <= 7) return true; }
       return false;
     });
 
     const getMinDays = course => {
       let min = 999;
-      const cat = course.catDate || course.assignmentDate;
       if (course.examDate) { const d = daysUntil(course.examDate); if (d >= 0) min = Math.min(min, d); }
-      if (cat) { const d = daysUntil(cat); if (d >= 0) min = Math.min(min, d); }
+      if (course.assignmentDate) { const d = daysUntil(course.assignmentDate); if (d >= 0) min = Math.min(min, d); }
       return min;
     };
     focusCourses.sort((a, b) => getMinDays(a) - getMinDays(b));
 
     if (focusCourses.length === 0) {
-      container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming CATs/exams this week. 🎉</p>`;
+      container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming deadlines this week. 🎉</p>`;
       return;
     }
 
     container.innerHTML = focusCourses.map(r => {
       const badges = [];
-      const cat = r.catDate || r.assignmentDate;
       if (r.examDate) {
         const d = daysUntil(r.examDate);
         if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason focus-urgent">🚨 ${d === 0 ? 'Exam TODAY!' : 'Exam in ' + d + 'd'}</span>`);
       }
-      if (cat) {
-        const d = daysUntil(cat);
-        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 ${d === 0 ? 'CAT TODAY!' : 'CAT in ' + d + 'd'}</span>`);
+      if (r.assignmentDate) {
+        const d = daysUntil(r.assignmentDate);
+        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 ${d === 0 ? 'Task TODAY!' : 'Task in ' + d + 'd'}</span>`);
       }
       if (badges.length === 0) badges.push(`<span class="focus-reason">In Progress</span>`);
 
@@ -540,39 +508,42 @@
   // --- Main render ---
   function render() {
     const records = getRecords();
-    const body = document.getElementById('recordsBody');
+    const grid = document.getElementById('recordsGrid');
 
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:2rem;">No courses yet. Add one above or tap Reset Sem.</td></tr>`;
+      grid.innerHTML = `<div class="empty-msg">No courses yet. Add one above or tap Reset Sem.</div>`;
     } else {
-      body.innerHTML = records.map(r => {
+      grid.innerHTML = records.map(r => {
         const hrs = r.studyHours || 0, goal = r.studyGoal || 10;
         const pct = Math.min((hrs / goal) * 100, 100);
         const color = hrs >= goal ? '#2fb24c' : '#ff6f61';
         const overdue = r.examDate && r.status !== 'Completed' && new Date(r.examDate) < new Date();
         const mark = overdue
-          ? `<button class="small-btn" style="display:block;margin-top:6px;" onclick="markCompleted(${r.id})">✔ Mark completed</button>` : '';
-        const catVal = r.catDate || r.assignmentDate || '';
+          ? `<button class="small-btn" style="display:block;margin:6px 0 0;" onclick="markCompleted(${r.id})">✔ Mark completed</button>` : '';
         return `
-        <tr id="row-${r.id}">
-          <td class="course-code">${esc(r.code) || '—'}</td>
-          <td>${esc(r.name)}${r.unitNames ? `<span class="unit-subtext">${esc(r.unitNames)}</span>` : ''}</td>
-          <td>${r.units}</td>
-          <td><div>${esc(r.status)}${mark}</div></td>
-          <td style="font-size:0.85rem;white-space:nowrap;">${r.classTime ? esc(r.classTime) : '<span class="exam-passed">—</span>'}</td>
-          <td>${formatDeadline(catVal, true)}</td>
-          <td>${formatDeadline(r.examDate, false)}</td>
-          <td>
-            <div style="font-size:0.85rem;margin-bottom:2px;"><strong>${hrs}</strong>/${goal}hrs</div>
-            <div class="progress-container"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div>
-          </td>
-          <td class="actions-cell">
+        <div class="course-card${r.status === 'Completed' ? ' done' : ''}" id="row-${r.id}">
+          <div class="cc-head">
+            <span class="cc-code">${esc(r.code) || '—'}</span>
+            <span class="cc-units">${r.units} unit${Number(r.units) === 1 ? '' : 's'}</span>
+          </div>
+          <div>
+            <div class="cc-name">${esc(r.name)}</div>
+            ${r.unitNames ? `<span class="unit-subtext">${esc(r.unitNames)}</span>` : ''}
+          </div>
+          <div class="cc-grid">
+            <div class="cc-cell"><small>Status</small>${esc(r.status)}${mark}</div>
+            <div class="cc-cell"><small>Study progress</small><strong>${hrs}</strong>/${goal} hrs
+              <div class="progress-container"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div></div>
+            <div class="cc-cell"><small>Exam</small>${formatDeadline(r.examDate)}</div>
+            <div class="cc-cell"><small>Task / CAT due</small>${formatDeadline(r.assignmentDate)}</div>
+          </div>
+          <div class="cc-actions">
             <button class="small-btn log-btn" onclick="logHours(${r.id})">⏱️ Log</button>
             <button class="small-btn edit-btn" onclick="startEdit(${r.id})">Edit</button>
             <button class="small-btn clear-btn" onclick="clearRecordData(${r.id})">🧹 Clear</button>
             <button class="small-btn delete-btn" onclick="deleteRecord(${r.id})">Del</button>
-          </td>
-        </tr>`;
+          </div>
+        </div>`;
       }).join('');
     }
 
@@ -588,7 +559,7 @@
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=61').catch(() => {});
+    navigator.serviceWorker.register('sw.js?v=62').catch(() => {});
   }
 
   // --- Notifications ---
@@ -644,17 +615,16 @@
 
     getRecords().forEach(r => {
       const label = r.name || 'Course';
-      const cat = r.catDate || r.assignmentDate;
       if (r.examDate) {
         const d = daysUntil(r.examDate);
         if (d >= 0 && d <= 1) {
           notifyOnce(`notified_exam_${r.id}`, '🚨 EXAM ALERT', `${label} exam is ${d === 0 ? 'TODAY' : 'TOMORROW'}! Time to study!`);
         }
       }
-      if (cat) {
-        const d = daysUntil(cat);
+      if (r.assignmentDate) {
+        const d = daysUntil(r.assignmentDate);
         if (d >= 0 && d <= 1) {
-          notifyOnce(`notified_cat_${r.id}`, '📝 CAT ALERT', `${label} CAT is ${d === 0 ? 'TODAY' : 'TOMORROW'}!`);
+          notifyOnce(`notified_task_${r.id}`, '📝 TASK DUE', `${label} assignment/CAT is due ${d === 0 ? 'TODAY' : 'TOMORROW'}!`);
         }
       }
     });
