@@ -11,93 +11,173 @@
 <link rel="icon" href="android-chrome-192x192.png">
 <link rel="manifest" href="manifest.json">
 <style>
-  :root { color-scheme: dark; }
+  /* =====================================================
+     COLORS  (edit the values here for the page itself)
+     Buttons are NOT in this list: each button class
+     further down has its own colors.
+     ===================================================== */
   body {
-    --bg:#25272C; --card:#17392B; --card2:#050505; --ink:#f2f5fb; --muted:#f5fffe; --line:rgb(250, 245, 245);
-    --coral:#F2B53A; --coral-d:#F9311C; --forest:#228b22; --forest-l:#5fd08a; --navy-ink:#0a1730;
+    --page:#D9F2C4;      /* page background (light green) */
+    --card:#FFFFFF;      /* cards (white) */
+    --cell:#F2FAEA;      /* small boxes inside cards */
+    --text:#000000;      /* all writing */
+    --label:#7A5C00;     /* small gold labels */
+    --gold:#F5B800;      /* gold accents */
+    --line:rgba(0,0,0,0.25);
+    --track:#E3E3E3;     /* empty progress bar */
   }
-  body.dark-mode { --bg:#226b96; --card:#0B1325; --card2:#050505; }
+  body.dark-mode {
+    --page:#0D0D0D; --card:#1A1A1A; --cell:#262626; --text:#FFFFFF;
+    --label:#F5B800; --line:rgba(255,255,255,0.28); --track:#444444;
+  }
+  :root { color-scheme: light; }
+  body.dark-mode { color-scheme: dark; }
 
   * { box-sizing: border-box; font-family: system-ui, sans-serif; scroll-behavior: smooth; }
-  body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: var(--bg); color: var(--ink); }
-  html { background: var(--bg); }
-  h1 { color: var(--ink); margin-bottom: 0.2rem; }
-  h2 { color: var(--coral); font-size: 1rem; font-weight: bolder; margin-top: 0; }
-  .card { background: var(--card); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--line); border-top: 3px solid var(--coral); box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+  html { background: var(--page); }
+  body { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; background: var(--page); color: var(--text); }
+  h1 { color: var(--text); margin-bottom: 0.2rem; }
+  h2 { color: var(--text); font-size: 1rem; font-weight: 600; margin-top: 0; }
+  .card { background: var(--card); color: var(--text); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--line); border-top: 4px solid var(--gold); box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
 
   .top-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
   .semester-selector { display: flex; gap: 0.5rem; align-items: center; font-weight: bold; flex-wrap: wrap; }
-  .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid var(--coral); font-weight: bold; color: var(--ink); }
+  .semester-selector select { padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 2px solid var(--gold); font-weight: bold; }
 
-  input, select, button { padding: 0.6rem; font-size: 1rem; border-radius: 6px; border: 1px solid var(--line); }
-  input, select { background: var(--card2); color: var(--ink); }
-  input::placeholder { color: var(--muted); opacity: 0.6; }
-  button { background: var(--forest); color: #fff; border-color: var(--forest); cursor: pointer; font-weight: bolder; }
-  button:hover { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
-  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+  input, select { padding: 0.6rem; font-size: 1rem; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--text); }
+  body.dark-mode input, body.dark-mode select { background: var(--cell); }
+  input::placeholder { color: var(--text); opacity: 0.5; }
+  input:focus-visible, select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+  /* =====================================================
+     BUTTONS: structure only (no colors) ...
+     ===================================================== */
+  .btn { padding: 0.6rem 1rem; font-size: 1rem; font-weight: 700; line-height: 1.2; border-radius: 8px; border-width: 2px; border-style: solid; cursor: pointer; }
+  .btn-sm { padding: 0.4rem 0.7rem; font-size: 0.85rem; }
+  .btn:focus-visible { outline: 3px solid #F5B800; outline-offset: 2px; }
+
+  /* ... each button gets its own colors below. Change one without touching the others. */
+  .btn-signin  { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-signin:hover  { background: #FFD54A; }
+
+  .btn-logout  { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-logout:hover  { background: #FFF2B8; }
+
+  .btn-newsem  { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-newsem:hover  { background: #FFD54A; }
+
+  .btn-delsem  { background: #FF4D4D; color: #000000; border-color: #A81212; }
+  .btn-delsem:hover  { background: #FF7A7A; }
+
+  .btn-notify  { background: #FFFFFF; color: #000000; border-color: #000000; }   /* base look */
+  .btn-notify:hover  { background: #FFF2B8; }
+  .btn-notify.btn-on  { background: #2ECC71; border-color: #17803F; }            /* alerts ON  = green */
+  .btn-notify.btn-off { background: #FF4D4D; border-color: #A81212; }            /* alerts OFF = red   */
+
+  .btn-export  { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-export:hover  { background: #FFF2B8; }
+
+  .btn-reset   { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-reset:hover   { background: #FFF2B8; }
+
+  .btn-theme   { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-theme:hover   { background: #FFF2B8; }
+
+  .btn-add     { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-add:hover     { background: #FFD54A; }
+
+  .btn-create  { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-create:hover  { background: #FFD54A; }
+
+  .btn-cancel  { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-cancel:hover  { background: #FFF2B8; }
+
+  .btn-log     { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-log:hover     { background: #FFD54A; }
+
+  .btn-edit    { background: #FFFFFF; color: #000000; border-color: #000000; }
+  .btn-edit:hover    { background: #FFF2B8; }
+
+  .btn-clear   { background: #CDEFB2; color: #000000; border-color: #4C8C2B; }
+  .btn-clear:hover   { background: #B5E48C; }
+
+  .btn-delete  { background: #FF4D4D; color: #000000; border-color: #A81212; }
+  .btn-delete:hover  { background: #FF7A7A; }
+
+  .btn-save    { background: #F5B800; color: #000000; border-color: #8A6A00; }
+  .btn-save:hover    { background: #FFD54A; }
+
+  .btn-pass    { background: #2ECC71; color: #000000; border-color: #17803F; }   /* "Mark completed" */
+  .btn-pass:hover    { background: #5EE096; }
 
   .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .btn-outline { background: transparent; color: var(--coral); border: 1px solid var(--coral); }
-  .btn-outline:hover { background: var(--coral); color: var(--navy-ink); }
 
-  .small-btn { padding: 0.4rem 0.6rem; font-size: 0.8rem; margin-right: 4px; white-space: nowrap; border-radius: 4px; }
-  .delete-btn { background: var(--coral); border-color: var(--coral); color: var(--navy-ink); }
-  .delete-btn:hover { background: var(--coral-d); border-color: var(--coral-d); color: #fff; }
+  /* ---------- Stats ---------- */
+  .stats { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 110px; background: #FFF4C2; color: #000000; padding: 1rem; border-radius: 8px; text-align: center; border-bottom: 4px solid var(--gold); }
+  .stat strong { display: block; font-size: 1.5rem; color: #000000; }
+  .stat.study-stat { background: #CDEFB2; border-bottom-color: #2ECC71; }
 
+  /* ---------- Add form ---------- */
+  .form-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .fld { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; font-size: 0.75rem; color: var(--text); font-weight: 600; }
+  .fld input, .fld select { width: 100%; flex: none; min-width: 0; }
+
+  /* ---------- Course cards ---------- */
   .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-top: 1rem; }
-  .course-card { background: var(--card2); border: 1px solid var(--line); border-top: 3px solid var(--coral); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-  .course-card.done { border-top-color: var(--forest); }
+  .course-card { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--gold); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .course-card.done { border-top-color: #2ECC71; }
   .cc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .cc-code { font-weight: 800; color: var(--coral); font-size: 0.85rem; letter-spacing: 0.05em; }
-  .cc-units { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: rgba(255,255,255,0.12); }
+  .cc-code { font-weight: 800; color: var(--label); font-size: 0.9rem; letter-spacing: 0.05em; }
+  .cc-units { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: #F5B800; color: #000000; }
   .cc-name { font-weight: 700; font-size: 1.02rem; line-height: 1.25; }
+  .unit-subtext { display: block; color: var(--text); opacity: 0.75; font-size: 0.8rem; margin-top: 4px; font-style: italic; max-height: 7.5em; overflow-y: auto; }
   .cc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .cc-cell { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; min-width: 0; }
-  .cc-cell small { display: block; color: var(--coral); font-size: 0.65rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 3px; }
+  .cc-cell { background: var(--cell); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; min-width: 0; }
+  .cc-cell small { display: block; color: var(--label); font-size: 0.65rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 3px; }
   .cc-cell input, .cc-cell select { width: 100%; padding: 6px; font-size: 0.85rem; }
   .cc-wide { grid-column: 1 / -1; }
   .cc-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
-  .cc-actions .small-btn { flex: 1; min-height: 40px; min-width: 64px; margin-right: 0; font-size: 0.85rem; text-align: center; }
-  .empty-msg { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
+  .cc-actions .btn { flex: 1; min-height: 40px; min-width: 64px; font-size: 0.85rem; text-align: center; }
+  .empty-msg { grid-column: 1 / -1; text-align: center; padding: 2rem; }
 
-  .stats { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-  .stat { flex: 1; min-width: 110px; background: var(--card2); padding: 1rem; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--coral); }
-  .stat strong { display: block; font-size: 1.5rem; color: var(--coral); }
-  .stat.study-stat { border-bottom-color: var(--forest); }
-  .stat.study-stat strong { color: var(--forest-l); }
+  /* ---------- Pills: status, deadlines ---------- */
+  .st, .dl { display: inline-block; padding: 2px 9px; border-radius: 99px; font-weight: 700; font-size: 0.8rem; color: #000000; }
+  .st-done { background: #2ECC71; }                       /* Completed  = green */
+  .st-prog { background: #F5B800; }                       /* In Progress = gold */
+  .st-plan { background: #FFFFFF; border: 1px solid #000000; }  /* Planned = white */
+  .dl-normal { background: #CDEFB2; }                     /* far away    = light green */
+  .dl-soon   { background: #F5B800; }                     /* within 3 days = gold */
+  .dl-red    { background: #FF4D4D; }                     /* within 1 day = red */
+  .dl-pass   { background: #2ECC71; }                     /* Passed      = green */
+  .dl-none   { opacity: 0.6; }
 
-  .form-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .fld { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
-  .fld input, .fld select { width: 100%; flex: none; min-width: 0; }
-  .course-code { color: var(--muted); font-size: 0.85rem; }
-
-  .unit-subtext { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 4px; font-style: italic; max-height: 7.5em; overflow-y: auto; }
-  .progress-container { width: 100%; background: rgba(255,255,255,0.14); border-radius: 4px; height: 8px; margin-top: 4px; overflow: hidden; }
+  .progress-container { width: 100%; background: var(--track); border-radius: 4px; height: 8px; margin-top: 4px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
-  .exam-red { color: #ff6f61; font-weight: bolder; }
-  .exam-orange { color: #ffb347; font-weight: bolder; }
-  .exam-normal { color: var(--forest-l); font-weight: bolder; }
-  .exam-passed { color: var(--muted); }
 
-  /* Today's Focus */
-  .focus-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; background: var(--card2); border-radius: 6px; border-left: 4px solid var(--forest); }
+  /* ---------- Today's Focus ---------- */
+  .focus-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; background: var(--cell); border-radius: 6px; border-left: 5px solid var(--gold); }
   .focus-title { font-weight: bolder; font-size: 0.95rem; }
-  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: rgba(95,208,138,0.2); color: var(--forest-l); }
-  .focus-urgent { background: rgba(255,111,97,0.2); color: #ff6f61; }
+  .focus-reason { font-size: 0.8rem; font-weight: bolder; padding: 4px 8px; border-radius: 12px; background: #CDEFB2; color: #000000; }
+  .focus-gold { background: #F5B800; }
+  .focus-urgent { background: #FF4D4D; }
+  .ok-msg { margin: 0; font-weight: bold; }
 
-  #semesterModal > div { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line); }
+  /* ---------- Modal ---------- */
+  .modal-box { background: var(--card); color: var(--text); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid var(--line); border-top: 4px solid var(--gold); }
 
-  /* Collapsible headers */
+  /* ---------- Collapsible headers ---------- */
   .collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding-bottom: 10px; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
-  .collapsible-header:hover { border-bottom-color: var(--line); }
+  .collapsible-header:hover { border-bottom-color: var(--gold); }
   .collapsible-header h3 { margin: 0; }
   .collapsible-icon { font-size: 1.2rem; transition: transform 0.3s ease; }
 
+  /* ---------- Weekly chart ---------- */
   .week-chart { display: flex; align-items: flex-end; gap: 8px; height: 130px; margin-top: 1rem; }
-  .wk-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; font-size: 0.7rem; color: var(--muted); }
-  .wk-col b { color: var(--ink); font-size: 0.7rem; min-height: 1em; }
-  .wk-bar { width: 100%; border-radius: 6px 6px 0 0; background: var(--coral); }
-  .wk-col.today .wk-bar { background: var(--forest-l); }
+  .wk-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; font-size: 0.7rem; }
+  .wk-col b { font-size: 0.7rem; min-height: 1em; }
+  .wk-bar { width: 100%; border-radius: 6px 6px 0 0; background: #F5B800; }
+  .wk-col.today .wk-bar { background: #2ECC71; }
 
   @media (max-width: 600px) {
     body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
@@ -107,16 +187,14 @@
     .top-controls { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
     .semester-selector { justify-content: space-between; font-size: 0.9rem; flex-wrap: wrap; gap: 5px; }
     .semester-selector select { flex: 1; padding: 6px; }
-    .semester-selector button { padding: 6px 10px; font-size: 0.85rem; }
     .btn-group { width: 100%; display: flex; gap: 5px; flex-wrap: wrap; }
-    .btn-group button { flex: 1; padding: 8px; font-size: 0.85rem; }
+    .btn-group .btn { flex: 1; padding: 8px; font-size: 0.85rem; }
     .form-row { flex-direction: column; gap: 8px; }
     .fld { width: 100% !important; flex: none !important; }
     .fld input, .fld select { padding: 10px; font-size: 0.95rem; }
-    .form-row button { align-self: stretch !important; padding: 10px; font-size: 1rem; width: 100%; }
-
+    .form-row .btn { align-self: stretch !important; width: 100%; }
     .course-grid { grid-template-columns: 1fr; }
-
+    .cc-actions .btn { min-height: 44px; }
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
     .stat { padding: 10px 5px; min-width: 0; border-radius: 6px; }
     .stat strong { font-size: 1.2rem; }
@@ -129,23 +207,23 @@
 
   <div class="card top-controls">
     <div id="auth-container" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;width:100%;justify-content:flex-end;">
-      <button id="loginBtn" class="btn-outline" onclick="signIn()" style="background:var(--coral);color:var(--navy-ink);border-color:var(--coral);">Sign in with Google</button>
+      <button id="loginBtn" class="btn btn-signin" onclick="signIn()">Sign in with Google</button>
       <div id="userinfo" style="display:none;align-items:center;gap:10px;">
-        <span id="userName" style="font-weight:bolder;color:var(--ink);"></span>
-        <button class="btn-outline" onclick="signOut()" style="padding:4px 8px;font-size:0.8rem;">Logout</button>
+        <span id="userName" style="font-weight:bolder;"></span>
+        <button class="btn btn-sm btn-logout" onclick="signOut()">Logout</button>
       </div>
     </div>
     <div class="semester-selector">
       <label>📅 Semester:</label>
       <select id="semesterSelect" onchange="switchSemester(this.value)"></select>
-      <button class="btn-outline small-btn" onclick="createSemester()">+ New</button>
-      <button class="btn-outline small-btn" onclick="deleteSemester()" style="color:#ff4444;border-color:#ff4444;">🗑️ Del</button>
+      <button class="btn btn-sm btn-newsem" onclick="createSemester()">+ New</button>
+      <button class="btn btn-sm btn-delsem" onclick="deleteSemester()">🗑️ Del</button>
     </div>
     <div class="btn-group">
-      <button class="btn-outline" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
-      <button class="btn-outline" onclick="exportCSV()">⬇️ Export CSV</button>
-      <button class="btn-outline" onclick="resetToDefaults()">↻ Reset Sem</button>
-      <button class="btn-outline" onclick="toggleDarkMode()" id="themeBtn">🌙Dark</button>
+      <button class="btn btn-notify btn-off" id="notifyBtn" onclick="toggleNotifications()">🔕Alerts:OFF</button>
+      <button class="btn btn-export" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="btn btn-reset" onclick="resetToDefaults()">↻ Reset Sem</button>
+      <button class="btn btn-theme" onclick="toggleDarkMode()" id="themeBtn">🌙Dark</button>
     </div>
   </div>
 
@@ -162,7 +240,12 @@
         <label class="fld"><span>Unit names (optional)</span><input id="unitNames" placeholder="e.g. Vectors, Matrices" /></label>
         <label class="fld" style="flex:none;width:80px;"><span>Units</span><input id="units" type="number" placeholder="3" min="0" step="0.5" /></label>
         <label class="fld" style="flex:none;"><span>Exam date &amp; time</span><input id="examDate" type="datetime-local" /></label>
-        <label class="fld" style="flex:none;"><span>Task / CAT due</span><input id="assignmentDate" type="datetime-local" /></label>
+        <label class="fld" style="flex:none;width:100px;"><span>Class day</span>
+          <select id="classDay"><option value="">—</option><option>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option></select>
+        </label>
+        <label class="fld" style="flex:none;"><span>Class time</span><input id="classTime" type="time" /></label>
+        <label class="fld" style="flex:none;"><span>CAT date &amp; time</span><input id="catDate" type="datetime-local" /></label>
+        <label class="fld" style="flex:none;"><span>Assignment due</span><input id="assignmentDate" type="datetime-local" /></label>
         <label class="fld" style="flex:none;width:90px;"><span>Goal hrs</span><input id="studyGoal" type="number" placeholder="10" min="1" /></label>
         <label class="fld" style="flex:none;width:130px;"><span>Status</span>
           <select id="status">
@@ -171,7 +254,7 @@
             <option value="Planned">Planned</option>
           </select>
         </label>
-        <button onclick="addRecord()" style="align-self:flex-end;">Add</button>
+        <button class="btn btn-add" onclick="addRecord()" style="align-self:flex-end;">Add</button>
       </div>
     </div>
   </div>
@@ -210,12 +293,12 @@
 
   <!-- New Semester pop-up -->
   <div id="semesterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;">
-    <div style="background:white;padding:20px;border-radius:12px;width:90%;max-width:400px;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-      <h3 style="margin-top:0;color:var(--ink);">Create New Semester</h3>
-      <input type="text" id="newSemesterName" placeholder="e.g. Year 4 Sem 1" style="width:100%;padding:12px;margin-bottom:15px;font-size:1rem;border-radius:6px;border:1px solid var(--line);box-sizing:border-box;">
+    <div class="modal-box">
+      <h3 style="margin-top:0;">Create New Semester</h3>
+      <input type="text" id="newSemesterName" placeholder="e.g. Year 4 Sem 1" style="width:100%;padding:12px;margin-bottom:15px;font-size:1rem;border-radius:6px;box-sizing:border-box;">
       <div style="display:flex;gap:10px;">
-        <button onclick="submitNewSemester()" style="flex:1;padding:12px;">Create</button>
-        <button onclick="closeSemesterModal()" class="btn-outline" style="flex:1;padding:12px;">Cancel</button>
+        <button class="btn btn-create" onclick="submitNewSemester()" style="flex:1;padding:12px;">Create</button>
+        <button class="btn btn-cancel" onclick="closeSemesterModal()" style="flex:1;padding:12px;">Cancel</button>
       </div>
     </div>
   </div>
@@ -238,6 +321,20 @@
   function dayKey(d) {
     const x = d || new Date();
     return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+  }
+
+  const DAYS = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  function dayOptions(sel) {
+    return DAYS.map(d => `<option value="${d}" ${d === (sel || '') ? 'selected' : ''}>${d || '—'}</option>`).join('');
+  }
+  function formatClass(r) {
+    if (!r.classDay && !r.classTime) return '<span class="dl-none">—</span>';
+    let t = '';
+    if (r.classTime) {
+      const [h, m] = r.classTime.split(':').map(Number);
+      t = ((h % 12) || 12) + ':' + String(m).padStart(2, '0') + ' ' + (h >= 12 ? 'PM' : 'AM');
+    }
+    return `<strong>${esc((r.classDay || '') + ' ' + t).trim()}</strong>`;
   }
 
   // hours studied per day, across all semesters
@@ -282,7 +379,7 @@
 
   function makeCourses() {
     return DEFAULT_COURSES.map((c, i) => ({
-      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', examDate: '', assignmentDate: ''
+      id: Date.now() + i, ...c, studyHours: 0, studyGoal: 10, unitNames: '', examDate: '', assignmentDate: '', catDate: '', classDay: '', classTime: ''
     }));
   }
   function defaultData() {
@@ -367,19 +464,18 @@
 
   // --- Deadline display ---
   function formatDeadline(dateStr) {
-    if (!dateStr) return '<span class="exam-passed">—</span>';
+    if (!dateStr) return '<span class="dl-none">—</span>';
     const deadline = new Date(dateStr);
     const now = new Date();
-    if (deadline < now) return '<span class="exam-passed">Passed</span>';
+    if (deadline < now) return '<span class="dl dl-pass">Passed</span>';
 
     const formatted = deadline.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     const diffDays = (deadline - now) / (1000 * 60 * 60 * 24);
 
-    let colorClass = 'exam-normal';
-    if (diffDays <= 1) colorClass = 'exam-red';
-    else if (diffDays <= 3) colorClass = 'exam-orange';
-
-    return `<span class="${colorClass}" style="font-weight:bold;font-size:0.85rem;">${formatted}</span>`;
+    let cls = 'dl-normal';
+    if (diffDays <= 1) cls = 'dl-red';
+    else if (diffDays <= 3) cls = 'dl-soon';
+    return `<span class="dl ${cls}">${formatted}</span>`;
   }
 
   // --- CSV export ---
@@ -387,9 +483,9 @@
     const records = getRecords();
     if (records.length === 0) { alert('No records to export.'); return; }
     const q = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
-    let csv = 'Code,Course Name,Unit Names,Units,Status,Exam Date,Task Due,Study Hours,Goal Hours\n';
+    let csv = 'Code,Course Name,Unit Names,Units,Status,Class,CAT,Exam Date,Assignment Due,Study Hours,Goal Hours\n';
     records.forEach(r => {
-      csv += [q(r.code), q(r.name), q(r.unitNames), r.units, q(r.status), q(r.examDate), q(r.assignmentDate), r.studyHours || 0, r.studyGoal || 10].join(',') + '\n';
+      csv += [q(r.code), q(r.name), q(r.unitNames), r.units, q(r.status), q(((r.classDay || '') + ' ' + (r.classTime || '')).trim()), q(r.catDate), q(r.examDate), q(r.assignmentDate), r.studyHours || 0, r.studyGoal || 10].join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -420,15 +516,18 @@
     const units = parseFloat(document.getElementById('units').value);
     const examDate = document.getElementById('examDate').value;
     const assignmentDate = document.getElementById('assignmentDate').value;
+    const catDate = document.getElementById('catDate').value;
+    const classDay = document.getElementById('classDay').value;
+    const classTime = document.getElementById('classTime').value;
     const studyGoal = parseFloat(document.getElementById('studyGoal').value) || 10;
     const status = document.getElementById('status').value;
 
     if (!name || isNaN(units) || units <= 0) { alert('Please enter a valid course name and units.'); return; }
 
-    getRecords().push({ id: Date.now(), code, name, unitNames, units, examDate, assignmentDate, status, studyHours: 0, studyGoal });
+    getRecords().push({ id: Date.now(), code, name, unitNames, units, examDate, assignmentDate, catDate, classDay, classTime, status, studyHours: 0, studyGoal });
     save(); render();
 
-    ['code', 'name', 'unitNames', 'units', 'examDate', 'assignmentDate', 'studyGoal'].forEach(f => document.getElementById(f).value = '');
+    ['code', 'name', 'unitNames', 'units', 'examDate', 'assignmentDate', 'catDate', 'classDay', 'classTime', 'studyGoal'].forEach(f => document.getElementById(f).value = '');
   }
 
   // Clear resets hours, status and dates. Name and units stay.
@@ -441,6 +540,7 @@
     rec.status = 'Planned';
     rec.examDate = '';
     rec.assignmentDate = '';
+    rec.catDate = '';
     save(); render();
   }
 
@@ -475,11 +575,14 @@
           </select></div>
         <div class="cc-cell"><small>Goal hrs (done: ${rec.studyHours || 0})</small><input id="edit-goal-${id}" type="number" min="1" value="${rec.studyGoal || 10}"></div>
         <div class="cc-cell cc-wide"><small>Exam date &amp; time</small><input id="edit-examdate-${id}" type="datetime-local" value="${rec.examDate || ''}"></div>
-        <div class="cc-cell cc-wide"><small>Task / CAT due</small><input id="edit-assignmentdate-${id}" type="datetime-local" value="${rec.assignmentDate || ''}"></div>
+        <div class="cc-cell"><small>Class day</small><select id="edit-classday-${id}">${dayOptions(rec.classDay)}</select></div>
+        <div class="cc-cell"><small>Class time</small><input id="edit-classtime-${id}" type="time" value="${rec.classTime || ''}"></div>
+        <div class="cc-cell cc-wide"><small>CAT date &amp; time</small><input id="edit-catdate-${id}" type="datetime-local" value="${rec.catDate || ''}"></div>
+        <div class="cc-cell cc-wide"><small>Assignment due</small><input id="edit-assignmentdate-${id}" type="datetime-local" value="${rec.assignmentDate || ''}"></div>
       </div>
       <div class="cc-actions">
-        <button class="small-btn" onclick="saveEdit(${id})">Save</button>
-        <button class="small-btn btn-outline" onclick="render()">Cancel</button>
+        <button class="btn btn-save" onclick="saveEdit(${id})">Save</button>
+        <button class="btn btn-cancel" onclick="render()">Cancel</button>
       </div>`;
   }
 
@@ -494,6 +597,9 @@
     rec.status = document.getElementById(`edit-status-${id}`).value;
     rec.examDate = document.getElementById(`edit-examdate-${id}`).value;
     rec.assignmentDate = document.getElementById(`edit-assignmentdate-${id}`).value;
+    rec.catDate = document.getElementById(`edit-catdate-${id}`).value;
+    rec.classDay = document.getElementById(`edit-classday-${id}`).value;
+    rec.classTime = document.getElementById(`edit-classtime-${id}`).value;
     const goal = parseFloat(document.getElementById(`edit-goal-${id}`).value);
     if (!isNaN(goal) && goal > 0) rec.studyGoal = goal;
     save(); render();
@@ -520,6 +626,7 @@
       if (r.status === 'In Progress') return true;
       if (r.examDate) { const d = daysUntil(r.examDate); if (d >= 0 && d <= 7) return true; }
       if (r.assignmentDate) { const d = daysUntil(r.assignmentDate); if (d >= 0 && d <= 7) return true; }
+      if (r.catDate) { const d = daysUntil(r.catDate); if (d >= 0 && d <= 7) return true; }
       return false;
     });
 
@@ -527,12 +634,13 @@
       let min = 999;
       if (course.examDate) { const d = daysUntil(course.examDate); if (d >= 0) min = Math.min(min, d); }
       if (course.assignmentDate) { const d = daysUntil(course.assignmentDate); if (d >= 0) min = Math.min(min, d); }
+      if (course.catDate) { const d = daysUntil(course.catDate); if (d >= 0) min = Math.min(min, d); }
       return min;
     };
     focusCourses.sort((a, b) => (getMinDays(a) - getMinDays(b)) || (neglectDays(b) - neglectDays(a)));
 
     if (focusCourses.length === 0) {
-      container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming deadlines this week. 🎉</p>`;
+      container.innerHTML = `<p class="ok-msg">You're all caught up! No active courses or upcoming deadlines this week. 🎉</p>`;
       return;
     }
 
@@ -544,11 +652,15 @@
       }
       if (r.assignmentDate) {
         const d = daysUntil(r.assignmentDate);
-        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 ${d === 0 ? 'Task TODAY!' : 'Task in ' + d + 'd'}</span>`);
+        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason focus-gold">📝 ${d === 0 ? 'Task TODAY!' : 'Task in ' + d + 'd'}</span>`);
+      }
+      if (r.catDate) {
+        const d = daysUntil(r.catDate);
+        if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason focus-urgent">📋 ${d === 0 ? 'CAT TODAY!' : 'CAT in ' + d + 'd'}</span>`);
       }
       const nd = neglectDays(r);
-      if (nd === 99) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">😴 Not started</span>`);
-      else if (nd >= 3) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">😴 ${nd}d without study</span>`);
+      if (nd === 99) badges.push(`<span class="focus-reason focus-gold">😴 Not started</span>`);
+      else if (nd >= 3) badges.push(`<span class="focus-reason focus-gold">😴 ${nd}d without study</span>`);
       if (badges.length === 0) badges.push(`<span class="focus-reason">In Progress</span>`);
 
       return `
@@ -590,10 +702,10 @@
       grid.innerHTML = records.map(r => {
         const hrs = r.studyHours || 0, goal = r.studyGoal || 10;
         const pct = Math.min((hrs / goal) * 100, 100);
-        const color = hrs >= goal ? '#2fb24c' : '#ff6f61';
+        const color = hrs >= goal ? '#2ECC71' : '#F5B800';
         const overdue = r.examDate && r.status !== 'Completed' && new Date(r.examDate) < new Date();
         const mark = overdue
-          ? `<button class="small-btn" style="display:block;margin:6px 0 0;" onclick="markCompleted(${r.id})">✔ Mark completed</button>` : '';
+          ? `<button class="btn btn-sm btn-pass" style="display:block;margin:6px 0 0;" onclick="markCompleted(${r.id})">✔ Mark completed</button>` : '';
         return `
         <div class="course-card${r.status === 'Completed' ? ' done' : ''}" id="row-${r.id}">
           <div class="cc-head">
@@ -605,17 +717,19 @@
             ${r.unitNames ? `<span class="unit-subtext">${esc(r.unitNames)}</span>` : ''}
           </div>
           <div class="cc-grid">
-            <div class="cc-cell"><small>Status</small>${esc(r.status)}${mark}</div>
+            <div class="cc-cell"><small>Status</small><span class="st ${r.status === 'Completed' ? 'st-done' : r.status === 'In Progress' ? 'st-prog' : 'st-plan'}">${esc(r.status)}</span>${mark}</div>
             <div class="cc-cell"><small>Study progress</small><strong>${hrs}</strong>/${goal} hrs
               <div class="progress-container"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div></div>
+            <div class="cc-cell"><small>Class</small>${formatClass(r)}</div>
+            <div class="cc-cell"><small>CAT</small>${formatDeadline(r.catDate)}</div>
             <div class="cc-cell"><small>Exam</small>${formatDeadline(r.examDate)}</div>
-            <div class="cc-cell"><small>Task / CAT due</small>${formatDeadline(r.assignmentDate)}</div>
+            <div class="cc-cell"><small>Assignment due</small>${formatDeadline(r.assignmentDate)}</div>
           </div>
           <div class="cc-actions">
-            <button class="small-btn log-btn" onclick="logHours(${r.id})">⏱️ Log</button>
-            <button class="small-btn edit-btn" onclick="startEdit(${r.id})">Edit</button>
-            <button class="small-btn clear-btn" onclick="clearRecordData(${r.id})">🧹 Clear</button>
-            <button class="small-btn delete-btn" onclick="deleteRecord(${r.id})">Del</button>
+            <button class="btn btn-log" onclick="logHours(${r.id})">⏱️ Log</button>
+            <button class="btn btn-edit" onclick="startEdit(${r.id})">Edit</button>
+            <button class="btn btn-clear" onclick="clearRecordData(${r.id})">🧹 Clear</button>
+            <button class="btn btn-delete" onclick="deleteRecord(${r.id})">Del</button>
           </div>
         </div>`;
       }).join('');
@@ -645,8 +759,8 @@
     if (!btn) return;
     const on = hasNotif && Notification.permission === 'granted' && localStorage.getItem('alertsOff') !== 'true';
     btn.innerHTML = on ? '🔔Alerts:ON' : '🔕Alerts:OFF';
-    btn.style.color = on ? '#5fd08a' : '#ff6f61';
-    btn.style.borderColor = on ? '#5fd08a' : '#ff6f61';
+    btn.classList.toggle('btn-on', on);
+    btn.classList.toggle('btn-off', !on);
   }
 
   function toggleNotifications() {
@@ -700,6 +814,12 @@
         const d = daysUntil(r.assignmentDate);
         if (d >= 0 && d <= 1) {
           notifyOnce(`notified_task_${r.id}`, '📝 TASK DUE', `${label} assignment/CAT is due ${d === 0 ? 'TODAY' : 'TOMORROW'}!`);
+        }
+      }
+      if (r.catDate) {
+        const d = daysUntil(r.catDate);
+        if (d >= 0 && d <= 1) {
+          notifyOnce(`notified_cat_${r.id}`, '📋 CAT ALERT', `${label} CAT is ${d === 0 ? 'TODAY' : 'TOMORROW'}! Time to revise!`);
         }
       }
     });
