@@ -93,6 +93,12 @@
   .collapsible-header h3 { margin: 0; }
   .collapsible-icon { font-size: 1.2rem; transition: transform 0.3s ease; }
 
+  .week-chart { display: flex; align-items: flex-end; gap: 8px; height: 130px; margin-top: 1rem; }
+  .wk-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; font-size: 0.7rem; color: var(--muted); }
+  .wk-col b { color: var(--ink); font-size: 0.7rem; min-height: 1em; }
+  .wk-bar { width: 100%; border-radius: 6px 6px 0 0; background: var(--coral); }
+  .wk-col.today .wk-bar { background: var(--forest-l); }
+
   @media (max-width: 600px) {
     body { margin: 10px auto; padding: 0 10px; overflow-x: hidden; }
     h1 { font-size: 1.3rem; }
@@ -175,6 +181,16 @@
     <div id="focusContent" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 
+  <div class="card" id="statsCard">
+    <h3>📈 Study streak &amp; this week</h3>
+    <div class="stats">
+      <div class="stat">🔥 Streak (days)<strong id="streakVal">0</strong></div>
+      <div class="stat">Today<strong id="todayVal">0h</strong></div>
+      <div class="stat study-stat">Last 7 days<strong id="weekVal">0h</strong></div>
+    </div>
+    <div class="week-chart" id="weekChart"></div>
+  </div>
+
   <!-- Collapsible: My records -->
   <div class="card" id="recordsSection">
     <div class="collapsible-header" onclick="toggleSection('recordsContent', 'recordsIcon')">
@@ -217,6 +233,38 @@
   // Escape user text before putting it into HTML
   function esc(t) {
     return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function dayKey(d) {
+    const x = d || new Date();
+    return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+  }
+
+  // hours studied per day, across all semesters
+  function hoursByDay() {
+    const m = {};
+    Object.values(appData.semesters).forEach(list =>
+      list.forEach(r => (r.sessions || []).forEach(s => { m[s.d] = (m[s.d] || 0) + s.h; })));
+    return m;
+  }
+
+  function getStreak() {
+    const by = hoursByDay();
+    const d = new Date();
+    if (!by[dayKey(d)]) d.setDate(d.getDate() - 1); // today not studied yet: streak still alive
+    let n = 0;
+    while (by[dayKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+
+  // days since last session for a course (99 = never studied)
+  function neglectDays(r) {
+    const s = r.sessions || [];
+    if (!s.length) return 99;
+    const last = s.reduce((m, x) => (x.d > m ? x.d : m), '');
+    const [y, mo, da] = last.split('-').map(Number);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    return Math.round((today - new Date(y, mo - 1, da)) / 86400000);
   }
 
   const DEFAULT_COURSES = [
@@ -360,6 +408,8 @@
     const hours = parseFloat(input);
     if (isNaN(hours) || hours <= 0) { alert('Please enter a valid positive number.'); return; }
     rec.studyHours = (rec.studyHours || 0) + hours;
+    rec.sessions = rec.sessions || [];
+    rec.sessions.push({ d: dayKey(), h: hours });
     save(); render();
   }
 
@@ -387,6 +437,7 @@
     const rec = getRecords().find(r => r.id === id);
     if (!rec) return;
     rec.studyHours = 0;
+    rec.sessions = [];
     rec.status = 'Planned';
     rec.examDate = '';
     rec.assignmentDate = '';
@@ -478,7 +529,7 @@
       if (course.assignmentDate) { const d = daysUntil(course.assignmentDate); if (d >= 0) min = Math.min(min, d); }
       return min;
     };
-    focusCourses.sort((a, b) => getMinDays(a) - getMinDays(b));
+    focusCourses.sort((a, b) => (getMinDays(a) - getMinDays(b)) || (neglectDays(b) - neglectDays(a)));
 
     if (focusCourses.length === 0) {
       container.innerHTML = `<p style="color:#5fd08a;font-weight:bold;margin:0;">You're all caught up! No active courses or upcoming deadlines this week. 🎉</p>`;
@@ -495,6 +546,9 @@
         const d = daysUntil(r.assignmentDate);
         if (d >= 0 && d <= 7) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">📝 ${d === 0 ? 'Task TODAY!' : 'Task in ' + d + 'd'}</span>`);
       }
+      const nd = neglectDays(r);
+      if (nd === 99) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">😴 Not started</span>`);
+      else if (nd >= 3) badges.push(`<span class="focus-reason" style="background:rgba(255,179,71,0.2);color:#ffb347;">😴 ${nd}d without study</span>`);
       if (badges.length === 0) badges.push(`<span class="focus-reason">In Progress</span>`);
 
       return `
@@ -503,6 +557,26 @@
           <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;">${badges.join('')}</div>
         </div>`;
     }).join('');
+  }
+
+  function renderStats() {
+    const by = hoursByDay();
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      days.push({ label: d.toLocaleDateString('en-US', { weekday: 'short' }), h: by[dayKey(d)] || 0 });
+    }
+    const max = Math.max(1, ...days.map(x => x.h));
+    const week = days.reduce((s, x) => s + x.h, 0);
+    const r1 = n => Math.round(n * 10) / 10;
+
+    document.getElementById('streakVal').textContent = getStreak();
+    document.getElementById('todayVal').textContent = r1(by[dayKey()] || 0) + 'h';
+    document.getElementById('weekVal').textContent = r1(week) + 'h';
+    document.getElementById('weekChart').innerHTML = days.map((x, i) =>
+      `<div class="wk-col${i === 6 ? ' today' : ''}"><b>${x.h ? r1(x.h) : ''}</b>` +
+      `<div class="wk-bar" style="height:${Math.max(3, x.h / max * 80)}px"></div><span>${x.label}</span></div>`
+    ).join('');
   }
 
   // --- Main render ---
@@ -556,6 +630,7 @@
     document.getElementById('totalStudyHours').textContent = sumHours(records);
 
     renderFocusDashboard();
+    renderStats();
   }
 
   if ('serviceWorker' in navigator) {
